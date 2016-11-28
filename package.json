@@ -2,9 +2,15 @@
   "name": "meteor-negotiation-prototype",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "storybook": "start -storybook -p 9001 -c .storybook"
   },
   "dependencies": {
-    "meteor-node-stubs": "~0.2.0"
+    "meteor-node-stubs": "~0.2.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
+  },
+  "devDependencies": {
+    "@kadira/storybook": "^2.33.0"
   }
 }
