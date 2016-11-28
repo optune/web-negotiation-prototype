@@ -6,9 +6,11 @@ import Button from './Button.jsx';
 storiesOf("element/Button", module)
 .add('Button', () => 
 	(
-		<Button />
+		<Button title="Bla" />
 	)
 )
-.add('Button', () =>
+.add('Button 2', () =>
 	(
-		))
+		<Button title="Blabla" />
+	)
+)
