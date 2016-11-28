@@ -3,6 +3,7 @@ import centered from '@kadira/react-storybook-decorator-centered';
 import infoAddon from '@kadira/react-storybook-addon-info';
 
 import '../node_modules/@optune/react-base-components/dist/styles.scss';
+import '../imports/styles/main.scss';
 
 
 setAddon(infoAddon);
