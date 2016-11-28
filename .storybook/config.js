@@ -10,7 +10,7 @@ setAddon(infoAddon);
 addDecorator(centered);
  */
 
-const req = require.context('../', true, /\.story\.jsx$/);
+const req = require.context('../imports', true, /\.story\.jsx$/);
 
 function loadStories() {
   req.keys().forEach(req);
