@@ -4,7 +4,7 @@ import { storiesOf} from '@kadira/storybook';
 import Button from './Button.jsx';
 
 storiesOf("element/Button", module)
-.add('Button', () => 
+.add('Button', () =>
 	(
 		<Button title="Bla" />
 	)
