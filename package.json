@@ -7,6 +7,9 @@
     "lint": "eslint ."
   },
   "eslintConfig": {
+    "env": {
+      "shared-node-browser": true
+    },
     "parser": "babel-eslint",
     "parserOptions": {
       "allowImportExportEverywhere": true
@@ -23,7 +26,8 @@
     },
     "rules": {
       "max-lines": "error",
-      "import/no-extraneous-dependencies": false
+      "import/no-extraneous-dependencies": 0,
+      "import/extensions": 0
     }
   },
   "dependencies": {
