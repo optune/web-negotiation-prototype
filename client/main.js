@@ -1,6 +1,8 @@
 import layer from 'layer-websdk';
 import layerUI from 'layer-ui-web';
 
+import '../imports/startup/client';
+
 
 layerUI.init({
   layer,

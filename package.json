@@ -16,21 +16,14 @@
     ],
     "extends": [
       "airbnb",
-      "plugin:meteor/recommended"
+      "plugin:react/recommended"
     ],
     "settings": {
       "import/resolver": "meteor"
     },
     "rules": {
       "max-lines": "error",
-      "import/no-extraneous-dependencies": [
-        "error",
-        {
-          "devDependencies": [
-            "**/*.story.jsx"
-          ]
-        }
-      ]
+      "import/no-extraneous-dependencies": false
     }
   },
   "dependencies": {
@@ -39,6 +32,7 @@
     "layer-ui-web": "^0.9.4",
     "layer-websdk": "^3.0.0",
     "meteor-node-stubs": "~0.2.0",
+    "mgp": "^1.3.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1"
   },
