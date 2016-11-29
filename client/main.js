@@ -1,22 +1,10 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
+import layer from 'layer-websdk';
+import layerUI from 'layer-ui-web';
 
-import './main.html';
+import '../imports/startup/client.jsx';
 
-Template.hello.onCreated(function helloOnCreated() {
-  // counter starts at 0
-  this.counter = new ReactiveVar(0);
-});
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
-});
-
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
+layerUI.init({
+  layer,
+  appId: 'layer:///apps/staging/589c959e-b61f-11e6-9146-f6d10000544f',
 });
