@@ -5,14 +5,17 @@ import ThumbDown from './ThumbDown.jsx';
 
 const ThumbRating = props => (
   <div>
-    <ThumbDown size={24} color="#27E200" />
-    <ThumbUp size={24} color="#27E200" />
+    <ThumbDown size={24} active={props.value < 0} />
+    <ThumbUp size={24} active={props.value > 0} />
   </div>
 );
 
 ThumbRating.propTypes = {
-  size: React.PropTypes.number,
-  color: React.PropTypes.color,
+  value: React.PropTypes.number,
+};
+
+ThumbRating.defaultProps = {
+  value: 0,
 };
 
 export default ThumbRating;

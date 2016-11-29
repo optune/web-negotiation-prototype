@@ -6,11 +6,11 @@ import ThumbDown from './ThumbDown.jsx';
 storiesOf('element/ThumbDown', module)
 .add('ThumbDown', () =>
   (
-    <ThumbDown size={24} color="#000000" />
+    <ThumbDown size={24} />
   ),
 )
 .add('ThumbDown Active', () =>
   (
-    <ThumbDown size={24} color="#27E200" />
+    <ThumbDown size={24} active />
   ),
 );
