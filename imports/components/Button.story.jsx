@@ -12,5 +12,5 @@ storiesOf("element/Button", module)
 .add('Button 2', () =>
 	(
 		<Button title="Blabla" />
-	)
-)
+	),
+);
