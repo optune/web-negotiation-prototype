@@ -2,7 +2,7 @@
   "name": "meteor-negotiation-prototype",
   "private": true,
   "scripts": {
-    "start": "meteor run",
+    "start": "meteor run --settings settings.json",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "lint": "eslint ."
   },
@@ -38,6 +38,7 @@
     "meteor-node-stubs": "~0.2.0",
     "mgp": "^1.3.0",
     "react": "^15.4.1",
+    "react-addons-pure-render-mixin": "^15.4.1",
     "react-dom": "^15.4.1"
   },
   "devDependencies": {

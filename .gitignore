@@ -5,3 +5,6 @@ npm-debug.log*
 
 # Dependency
 node_modules/
+
+# Meteor settings. See settings.example.json for the required shape
+settings.json
