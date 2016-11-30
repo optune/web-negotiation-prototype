@@ -1,7 +1,7 @@
 {
   "name": "meteor-negotiation-prototype",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "start": "meteor run --settings settings.json",
     "storybook": "start-storybook -p 9001 -c .storybook",
