@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ThumbUp = props => (
-  <svg width={props.size} height={props.size} viewBox="81 739 36 36">
+  <svg onClick={props.onClick} width={props.size} height={props.size} viewBox="81 739 36 36">
     <defs />
     <g id="ic_thumb_up_black" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" transform="translate(81.000000, 739.000000)">
       <g id="Group">
@@ -18,7 +18,8 @@ const ThumbUp = props => (
 
 ThumbUp.propTypes = {
   size: React.PropTypes.number,
-  active: React.PropTypes.boolean,
+  active: React.PropTypes.bool,
+  onClick: React.PropTypes.func,
 };
 
 export default ThumbUp;
