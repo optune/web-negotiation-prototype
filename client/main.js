@@ -1,8 +1,6 @@
 import layer from 'layer-websdk';
 import layerUI from 'layer-ui-web';
 
-import '@optune/react-base-components/src/style/app.css';
-
 import '../imports/startup/client.jsx';
 
 
