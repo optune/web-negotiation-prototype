@@ -25,7 +25,9 @@ App.propTypes = {
 };
 
 const AppContainer = createContainer((props) => {
-  console.log(Meteor.user(), props);
+  const handles = [
+    Meteor.subscribe('users'),
+  ];
 
   const newProps = {
     ...props,
