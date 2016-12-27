@@ -4,6 +4,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 import { Meteor } from 'meteor/meteor';
 
+import sendbird from '../utils/sendbird.js';
 import UserCard from '../components/UserCard.jsx';
 import { actionCreators } from '../actions/App.js';
 
@@ -82,7 +83,7 @@ const AppContainer = createContainer((props) => {
     }).fetch();
 
     if (Meteor.user()) {
-      props.sendbird.connect(Meteor.user()._id, (user, error) => {
+      sendbird.connect(Meteor.user()._id, (user, error) => {
         console.log('sendbirded', user, error);
       });
     }
