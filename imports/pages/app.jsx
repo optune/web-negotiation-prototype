@@ -28,7 +28,7 @@ const App = props => (
             </ul>
           </div>
         :
-          <p>On one is online 🤔, invite your negotiant.</p>
+          <p>No one is online 🤔, invite your negotiant.</p>
         }
         <button onClick={props.logout}>Logout</button>
       </div>
