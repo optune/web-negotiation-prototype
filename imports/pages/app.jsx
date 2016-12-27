@@ -21,7 +21,7 @@ const App = props => (
               {props.onlineUsers.map(user => (
                 <UserCard
                   name={user.services.auth0.name}
-                  id={user._id}
+                  key={user._id}
                   profilePic={user.services.auth0.picture}
                 />
               ))}
@@ -66,6 +66,12 @@ const AppContainer = createContainer((props) => {
       _id: { $ne: Meteor.user()._id },
       'status.online': true,
     }).fetch();
+
+    if (Meteor.user()) {
+      props.sendbird.connect(Meteor.user()._id, (user, error) => {
+        console.log('sendbirded', user, error);
+      });
+    }
   }
 
   return newProps;
