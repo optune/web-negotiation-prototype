@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { createContainer } from 'meteor/react-meteor-data';
 
 import { Meteor } from 'meteor/meteor';
 
 import UserCard from '../components/UserCard.jsx';
+import { actionCreators } from '../actions/App.js';
 
 
 const App = props => (
@@ -23,6 +25,7 @@ const App = props => (
                   name={user.services.auth0.name}
                   key={user._id}
                   profilePic={user.services.auth0.picture}
+                  onClick={() => props.createNegotiation(user._id)}
                 />
               ))}
             </ul>
@@ -43,6 +46,17 @@ App.propTypes = {
   user: React.PropTypes.object,
   onlineUsers: React.PropTypes.array,
 };
+
+const mapStateToProps = (state, ownProps) => ({
+  ...ownProps,
+  ...state,
+});
+
+const mapDispatchToProps = dispatch => ({
+  createNegotiation: negotiantId => dispatch(actionCreators.createNegotiation(negotiantId)),
+});
+
+const AppRedux = connect(mapStateToProps, mapDispatchToProps)(App);
 
 const AppContainer = createContainer((props) => {
   const handles = [
@@ -75,7 +89,7 @@ const AppContainer = createContainer((props) => {
   }
 
   return newProps;
-}, App);
+}, AppRedux);
 
 
 export default AppContainer;

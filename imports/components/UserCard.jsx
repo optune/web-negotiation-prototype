@@ -2,7 +2,7 @@ import React from 'react';
 
 
 const UserCard = props => (
-  <div className="card padding bottom micro interactive flex">
+  <button className="card padding bottom micro interactive flex" onClick={props.onClick}>
     <div className="push top left micro circle sized sized-card">
       <img className="circle bg-light" src={props.profilePic} alt="profile pic" />
     </div>
@@ -10,13 +10,14 @@ const UserCard = props => (
       <h3><strong>{props.name}</strong></h3>
       <div className="subtitle">{props.id}</div>
     </summary>
-  </div>
+  </button>
 );
 
 UserCard.propTypes = {
   id: React.PropTypes.string,
   name: React.PropTypes.string,
   profilePic: React.PropTypes.string,
+  onClick: React.PropTypes.func,
 };
 
 
