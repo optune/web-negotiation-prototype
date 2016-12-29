@@ -36,11 +36,17 @@ const App = props => (
   </div>
 );
 
+const userPropType = React.PropTypes.shape({
+  id: React.PropTypes.string,
+  name: React.PropTypes.string,
+  profilePicUrl: React.PropTypes.string,
+});
+
 App.propTypes = {
-  login: React.PropTypes.func,
-  logout: React.PropTypes.func,
-  user: React.PropTypes.object,
-  onlineUsers: React.PropTypes.array,
+  login: React.PropTypes.func.isRequired,
+  logout: React.PropTypes.func.isRequired,
+  user: userPropType.isRequired,
+  onlineUsers: React.PropTypes.arrayOf(userPropType),
 };
 
 const mapStateToProps = state => ({
