@@ -1,6 +1,5 @@
 // This is a duck: https://github.com/erikras/ducks-modular-redux
 
-
 const initialState = {
   user: {
     name: undefined,
