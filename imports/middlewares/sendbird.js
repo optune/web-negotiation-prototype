@@ -13,7 +13,7 @@ export default store => next => (action) => {
       })).then(user => Promise.all([
 
         (new Promise((resolve, reject) => {
-          console.log(user);
+          console.log('received sendbird user:', user);
 
           sendbird.updateCurrentUserInfo(
             action.user.name,
@@ -31,7 +31,24 @@ export default store => next => (action) => {
           if (channelListQuery.hasNext) {
             channelListQuery.next((channelList, error) => {
               if (error) reject(error);
-              else store.dispatch(actionCreators.setChannels(channelList));
+              else {
+                console.log('received channels', channelList);
+
+                store.dispatch(actionCreators.setNegotiations(channelList.map((channel) => {
+                  const negotiant = channel.members.filter(c => c.userId !== action.user.id)[0];
+
+                  console.log(negotiant, action.user.id);
+
+                  return {
+                    id: channel.url,
+                    negotiant: {
+                      name: negotiant.nickname,
+                      id: negotiant.userId,
+                      profilePicUrl: negotiant.profileUrl,
+                    },
+                  };
+                })));
+              }
             });
           }
         })),

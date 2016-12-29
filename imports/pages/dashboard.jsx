@@ -10,8 +10,23 @@ const Dashboard = props => (
     <div>
       <h1>Hello {props.user.name}</h1>
       <p className="push bottom small">Welcome to the NEGOTIATOR</p>
+      {props.negotiations.length > 0 ?
+        <div className="push bottom small">
+          <h2 className="push bottom nano">Your negotiations</h2>
+          <ul>
+            {props.negotiations.map(negotation => (
+              <UserCard
+                name={negotation.negotiant.name}
+                key={negotation.id}
+                profilePic={negotation.negotiant.profilePicUrl}
+              />
+            ))}
+          </ul>
+        </div>
+      : undefined }
       {props.onlineUsers.length > 0 ?
         <div className="push bottom small">
+          <h2 className="push bottom nano">New negotiation</h2>
           <p>Select a negotiant from below to start a negotation:</p>
           <ul>
             {props.onlineUsers.map(user => (
@@ -42,6 +57,7 @@ Dashboard.propTypes = {
   logout: React.PropTypes.func.isRequired,
   user: userPropType.isRequired,
   onlineUsers: React.PropTypes.arrayOf(userPropType),
+  negotiations: React.PropTypes.array,
 };
 
 const mapStateToProps = state => ({
