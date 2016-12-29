@@ -2,11 +2,21 @@
 
 
 const initialState = {
-
+  user: {
+    name: undefined,
+    id: undefined,
+    profilePicUrl: undefined,
+  },
+  onlineUsers: [],
 };
 
 export const actions = {
   CREATE_NEGOTIATION: 'optune-negotiator/App/CREATE_NEGOTIATION',
+  AUTHENTICATE: 'optune-negotiator/App/AUTHENTICATE',
+  DEAUTHENTICATE: 'optune-negotiator/App/DEAUTHENTICATE',
+  SET_ONLINE_USERS: 'optune-negotiator/App/SET_ONLINE_USERS',
+  LOGIN: 'optune-negotiator/App/LOGIN',
+  LOGOUT: 'optune-negotiator/App/LOGOUT',
 };
 
 export const actionCreators = {
@@ -14,13 +24,32 @@ export const actionCreators = {
     type: actions.CREATE_NEGOTIATION,
     negotiantId,
   }),
+  authenticate: ({ name, id, profilePicUrl }) => ({
+    type: actions.AUTHENTICATE,
+    user: {
+      name, id, profilePicUrl,
+    },
+  }),
+  deauthenticate: () => ({
+    type: actions.DEAUTHENTICATE,
+    ...initialState,
+  }),
+  setOnlineUsers: onlineUsers => ({
+    type: actions.SET_ONLINE_USERS,
+    onlineUsers,
+  }),
+  login: () => ({ type: actions.LOGIN }),
+  logout: () => ({ type: actions.LOGOUT }),
 };
 
 export const reducer = (state = initialState, action) => {
   const { type, ...params } = action;
 
   switch (type) {
+    case actions.AUTHENTICATE:
     case actions.CREATE_NEGOTIATION:
+    case actions.SET_ONLINE_USERS:
+    case actions.DEAUTHENTICATE:
       return {
         ...state,
         ...params,

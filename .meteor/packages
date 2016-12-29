@@ -18,6 +18,5 @@ insecure@1.0.7                # Allow all DB writes from clients (for prototypin
 optune:auth0-oauth
 static-html
 fourseven:scss
-react-meteor-data
 mizzao:user-status
 autopublish
