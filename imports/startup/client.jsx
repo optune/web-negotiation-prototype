@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux';
+import { reducer as formReducer } from 'redux-form';
 
 import { reducer as app, actionCreators as appActionCreators } from '../actions/App.js';
 import { reducer as sendbird } from '../actions/sendbird.js';
@@ -21,6 +22,7 @@ import Negotiation from '../pages/negotiation.jsx';
 const reducers = combineReducers({
   app,
   sendbird,
+  form: formReducer,
   routing: routerReducer,
 });
 

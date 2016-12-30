@@ -44,6 +44,7 @@
     "react-redux": "^5.0.1",
     "react-router": "^3.0.0",
     "react-router-redux": "^4.0.7",
+    "redux-form": "^6.4.2",
     "sendbird": "^3.0.18"
   },
   "devDependencies": {

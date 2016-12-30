@@ -1,17 +1,28 @@
 import React from 'react';
+import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 
 import { actionCreators } from '../actions/App.js';
 
 
 const Negotiation = props => (
-  <div className="flex-center-middle filling">
-    <button>Negotiation</button>
-  </div>
+  <form className="flex-center-middle filling" onSubmit={props.handleSubmit}>
+    <p>
+      <Field name="message" component="textarea" type="text" placeholder="Your message" />
+    </p>
+    <p>
+      <button type="submit" disabled={props.pristine || props.submitting}>Submit</button>
+    </p>
+  </form>
 );
 
 Negotiation.propTypes = {
+  handleSubmit: React.PropTypes.func,
+  pristine: React.PropTypes.bool,
+  submitting: React.PropTypes.bool,
 };
+
+const NegotiationForm = reduxForm({ form: 'negotiation' })(Negotiation);
 
 class NegotiationLifecycle extends React.Component {
   componentWillMount() {
@@ -19,7 +30,7 @@ class NegotiationLifecycle extends React.Component {
   }
 
   render() {
-    return <Negotiation {...this.props} />;
+    return <NegotiationForm {...this.props} />;
   }
 }
 
