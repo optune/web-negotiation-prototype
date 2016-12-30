@@ -8,7 +8,7 @@ import {
   actionCreators as sendbirdActionCreators,
 } from '../actions/sendbird.js';
 
-import { connect, getChannels, createChannel } from '../utils/sendbird.js';
+import { connect, getChannels, getChannel, createChannel, sendMessage } from '../utils/sendbird.js';
 
 
 export default store => next => (action) => {
@@ -53,12 +53,28 @@ export default store => next => (action) => {
 
       break;
     case appActions.CREATE_NEGOTIATION:
-      createChannel([store.getState().app.user.id, action.negotiantId]);
+      createChannel([store.getState().app.user.id, action.negotiantId])
+      .catch((error) => { throw error; });
 
       break;
     case appActions.SELECT_NEGOTIATION:
       store.dispatch(push(`/${action.negotiationId.slice(23)}`));
       break;
+    case appActions.SEND_MESSAGE: {
+      const channelUrl = store.getState().app.currentNegotiation.url;
+
+      sendMessage(channelUrl, action.message)
+      .then((message) => {
+        console.log(message);
+        return getChannel(channelUrl);
+      })
+      .then((channel) => {
+        console.log(channel);
+        store.dispatch(appActionCreators.setCurrentNegotiation(channel));
+      })
+      .catch((error) => { throw error; });
+      break;
+    }
     default:
   }
 

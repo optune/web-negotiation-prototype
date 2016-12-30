@@ -6,7 +6,7 @@ import { actionCreators } from '../actions/App.js';
 
 
 const Negotiation = props => (
-  <form className="flex-center-middle filling" onSubmit={props.handleSubmit}>
+  <form className="flex-center-middle filling" onSubmit={props.handleSubmit(props.sendMessage)}>
     <p>
       <Field name="message" component="textarea" type="text" placeholder="Your message" />
     </p>
@@ -18,11 +18,18 @@ const Negotiation = props => (
 
 Negotiation.propTypes = {
   handleSubmit: React.PropTypes.func,
+  sendMessage: React.PropTypes.func,
   pristine: React.PropTypes.bool,
   submitting: React.PropTypes.bool,
 };
 
-const NegotiationForm = reduxForm({ form: 'negotiation' })(Negotiation);
+const NegotiationForm = reduxForm({
+  form: 'negotiation',
+  /*onSubmit(values) {
+    console.log(values);
+  },
+  */
+})(Negotiation);
 
 class NegotiationLifecycle extends React.Component {
   componentWillMount() {
@@ -42,11 +49,12 @@ NegotiationLifecycle.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  ...state.app,
+  // ...state.app,
 });
 
 const mapDispatchToProps = dispatch => ({
   loadNegotiation(id) { dispatch(actionCreators.loadNegotiation(id)); },
+  sendMessage(values) { dispatch(actionCreators.sendMessage(values.message)); },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NegotiationLifecycle);

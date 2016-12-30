@@ -20,6 +20,7 @@ export const actions = {
   DEAUTHENTICATE: 'optune-negotiator/App/DEAUTHENTICATE',
   SET_ONLINE_USERS: 'optune-negotiator/App/SET_ONLINE_USERS',
   SET_NEGOTIATIONS: 'optune-negotiator/App/SET_NEGOTIATIONS',
+  SEND_MESSAGE: 'optune-negotiator/App/SEND_MESSAGE',
   LOGIN: 'optune-negotiator/App/LOGIN',
   LOGOUT: 'optune-negotiator/App/LOGOUT',
 };
@@ -58,6 +59,10 @@ export const actionCreators = {
   setCurrentNegotiation: currentNegotiation => ({
     type: actions.SET_CURRENT_NEGOTIATION,
     currentNegotiation,
+  }),
+  sendMessage: message => ({
+    type: actions.SEND_MESSAGE,
+    message,
   }),
   login: () => ({ type: actions.LOGIN }),
   logout: () => ({ type: actions.LOGOUT }),
