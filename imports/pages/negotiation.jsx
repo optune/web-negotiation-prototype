@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -7,8 +8,9 @@ import { actionCreators } from '../actions/App.js';
 
 
 const Negotiation = props => (
-  <form className="flex-center-middle filling" onSubmit={props.handleSubmit(props.sendMessage)}>
+  <form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
     <div className="element-width">
+      <Link to="/">Back to dashboard</Link>
       <ul>
         {props.messages.map(msg => (
           <li
@@ -75,5 +77,6 @@ const mapDispatchToProps = dispatch => ({
   loadNegotiation(id) { dispatch(actionCreators.loadNegotiation(id)); },
   sendMessage(values) { dispatch(actionCreators.sendMessage(values.message)); },
 });
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(NegotiationLifecycle);

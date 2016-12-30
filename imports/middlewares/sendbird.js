@@ -95,16 +95,19 @@ export default store => next => (action) => {
       });
       break;
     }
+    case appActions.LOAD_NEGOTIATION:
     case appActions.SET_CURRENT_NEGOTIATION:
-      getMessages(action.currentNegotiation.id)
-      .then((messages) => {
-        store.dispatch(appActionCreators.setMessages(
-          messages
-          .sort((a, b) => a.createdAt > b.createdAt)
-          .map(mapSendbirdMessage),
-        ));
-      })
-      .catch((error) => { throw error; });
+      if (store.getState().sendbird.connected) {
+        getMessages(action.currentNegotiation.id)
+        .then((messages) => {
+          store.dispatch(appActionCreators.setMessages(
+            messages
+            .sort((a, b) => a.createdAt > b.createdAt)
+            .map(mapSendbirdMessage),
+          ));
+        })
+        .catch((error) => { throw error; });
+      }
       break;
     default:
   }

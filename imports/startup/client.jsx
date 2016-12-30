@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Accounts } from 'meteor/accounts-base';
 import { Tracker } from 'meteor/tracker';
 
 import React from 'react';
@@ -47,9 +48,12 @@ const deconstructUser = user => ({
   profilePicUrl: user.services.auth0.picture,
 });
 
+Accounts.onLogin(() => {
+  store.dispatch(appActionCreators.authenticate(deconstructUser(Meteor.user())));
+});
+
 Tracker.autorun(() => {
   if (Meteor.user()) {
-    store.dispatch(appActionCreators.authenticate(deconstructUser(Meteor.user())));
     store.dispatch(appActionCreators.setOnlineUsers(
       Meteor.users.find({
         _id: { $ne: Meteor.user()._id },
