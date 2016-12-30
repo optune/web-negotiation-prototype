@@ -29,29 +29,30 @@ export default store => next => (action) => {
 
   switch (action.type) {
     case appActions.AUTHENTICATE:
-      connect(action.user.id, action.user.name, action.user.profilePicUrl, (channel, message) => {
-        store.dispatch(appActionCreators.receiveMessage(
-          channel.url,
-          mapSendbirdMessage(message),
-        ));
-      })
-      .then((user) => {
-        store.dispatch(sendbirdActionCreators.connect(user));
+      if (!store.getState().sendbird.connected) {
+        connect(action.user.id, action.user.name, action.user.profilePicUrl, (channel, message) => {
+          store.dispatch(appActionCreators.receiveMessage(
+            channel.url,
+            mapSendbirdMessage(message),
+          ));
+        })
+        .then((user) => {
+          store.dispatch(sendbirdActionCreators.connect(user));
 
-        return getChannels();
-      })
-      .then((channels) => {
-        const currentNegotiationId = store.getState().app.currentNegotiation.id;
-        const currentChannel = channels.find(c => c.url === currentNegotiationId);
+          return getChannels();
+        })
+        .then((channels) => {
+          const currentNegotiationId = store.getState().app.currentNegotiation.id;
+          const currentChannel = channels.find(c => c.url === currentNegotiationId);
 
-        store.dispatch(sendbirdActionCreators.setChannels(channels));
+          store.dispatch(sendbirdActionCreators.setChannels(channels));
 
-        if (currentChannel) {
-          store.dispatch(appActionCreators.setCurrentNegotiation(currentChannel.url));
-        }
-      })
-      .catch((error) => { throw error; });
-
+          if (currentChannel) {
+            store.dispatch(appActionCreators.setCurrentNegotiation(currentChannel.url));
+          }
+        })
+        .catch((error) => { throw error; });
+      }
       break;
     case sendbirdActions.SET_CHANNELS:
       store.dispatch(appActionCreators.setNegotiations(action.channels.map((channel) => {
