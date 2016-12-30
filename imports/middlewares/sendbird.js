@@ -21,9 +21,20 @@ import {
 
 
 export default store => next => (action) => {
+  const mapSendbirdMessage = msg => ({
+    text: msg.message,
+    mine: msg.sender.userId === store.getState().app.user.id,
+    id: `${msg.messageId}`,
+  });
+
   switch (action.type) {
     case appActions.AUTHENTICATE:
-      connect(action.user.id, action.user.name, action.user.profilePicUrl)
+      connect(action.user.id, action.user.name, action.user.profilePicUrl, (channel, message) => {
+        store.dispatch(appActionCreators.receiveMessage(
+          channel.url,
+          mapSendbirdMessage(message),
+        ));
+      })
       .then((user) => {
         store.dispatch(sendbirdActionCreators.connect(user));
 
@@ -86,15 +97,10 @@ export default store => next => (action) => {
     case appActions.SET_CURRENT_NEGOTIATION:
       getMessages(action.currentNegotiation.id)
       .then((messages) => {
-        console.log(messages);
         store.dispatch(appActionCreators.setMessages(
           messages
           .sort((a, b) => a.createdAt > b.createdAt)
-          .map(msg => ({
-            text: msg.message,
-            mine: msg.sender.userId === store.getState().app.user.id,
-            id: `${msg.messageId}`,
-          })),
+          .map(mapSendbirdMessage),
         ));
       })
       .catch((error) => { throw error; });

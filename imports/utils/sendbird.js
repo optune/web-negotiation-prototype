@@ -9,19 +9,24 @@ export const api = new SendBird({
 
 window.sendbird = api;
 
-export const connect = (id, name, profilePicUrl) => (
+export const connect = (id, name, profilePicUrl, onMessageReceived) => (
   new Promise((resolve, reject) =>
     api.connect(id, (user, error) => {
       if (error) reject(error);
       else resolve(user);
     }))
-  ).then(user => new Promise((resolve, reject) => {
+  ).then(user => new Promise((resolve, reject) => (
     api.updateCurrentUserInfo(name, profilePicUrl,
       (response, error) => {
         if (error) reject(error);
         else resolve(user);
       },
-    );
+    )
+  )).then(() => {
+    const channelHandler = new api.ChannelHandler();
+    channelHandler.onMessageReceived = onMessageReceived;
+    api.addChannelHandler('HANDLER_ID', channelHandler);
+    return user;
   }),
 );
 

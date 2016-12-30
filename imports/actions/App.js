@@ -28,6 +28,7 @@ export const actions = {
   SET_MESSAGES: 'optune-negotiator/App/SET_MESSAGES',
   SET_NEGOTIATIONS: 'optune-negotiator/App/SET_NEGOTIATIONS',
   SET_ONLINE_USERS: 'optune-negotiator/App/SET_ONLINE_USERS',
+  RECEIVE_MESSAGE: 'optune-negotiator/App/RECEIVE_MESSAGE',
 };
 
 export const actionCreators = {
@@ -77,6 +78,11 @@ export const actionCreators = {
     type: actions.ADD_OPTIMISTIC_MESSAGE,
     message,
   }),
+  receiveMessage: (negotiationId, message) => ({
+    type: actions.RECEIVE_MESSAGE,
+    message,
+    negotiationId,
+  }),
   login: () => ({ type: actions.LOGIN }),
   logout: () => ({ type: actions.LOGOUT }),
 };
@@ -113,8 +119,6 @@ export const reducer = (state = initialState, action) => {
         },
       };
     case actions.ADD_OPTIMISTIC_MESSAGE:
-      console.log(actions.ADD_OPTIMISTIC_MESSAGE, action, state.currentNegotiation.messages);
-
       return {
         ...state,
         currentNegotiation: {
@@ -129,6 +133,34 @@ export const reducer = (state = initialState, action) => {
           ],
         },
       };
+    case actions.RECEIVE_MESSAGE: {
+      let newState;
+
+      if (state.currentNegotiation.id === params.negotiationId) {
+        newState = {
+          ...state,
+          currentNegotiation: {
+            id: state.currentNegotiation.id,
+            messages: [
+              ...state.currentNegotiation.messages,
+              params.message,
+            ],
+          },
+        };
+      } else {
+        console.warn(
+          'received message from other channel',
+          'currentNegotiation.id', state.currentNegotiation.id,
+          'channelId', params.negotiationId,
+          'message', params.message,
+        );
+        newState = {
+          ...state,
+        };
+      }
+
+      return newState;
+    }
     default:
       return state;
   }
