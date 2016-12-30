@@ -71,3 +71,16 @@ export const sendMessage = (channelUrl, message) => (
     })
   ))
 );
+
+export const getMessages = channelUrl => (
+  getChannel(channelUrl)
+  .then(channel => (
+    new Promise((resolve, reject) => {
+      channel.createPreviousMessageListQuery()
+      .load(200, true, (messages, error) => {
+        if (error) reject(error);
+        else resolve(messages);
+      });
+    })
+  ))
+);

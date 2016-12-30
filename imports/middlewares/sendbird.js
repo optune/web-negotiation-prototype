@@ -8,13 +8,19 @@ import {
   actionCreators as sendbirdActionCreators,
 } from '../actions/sendbird.js';
 
-import { connect, getChannels, getChannel, createChannel, sendMessage } from '../utils/sendbird.js';
+import {
+  connect,
+  getChannels,
+  getChannel,
+  createChannel,
+  sendMessage,
+  getMessages,
+} from '../utils/sendbird.js';
 
 
 export default store => next => (action) => {
   switch (action.type) {
     case appActions.AUTHENTICATE:
-
       connect(action.user.id, action.user.name, action.user.profilePicUrl)
       .then((user) => {
         store.dispatch(sendbirdActionCreators.connect(user));
@@ -23,14 +29,12 @@ export default store => next => (action) => {
       })
       .then((channels) => {
         const currentNegotiationId = store.getState().app.currentNegotiation.id;
+        const currentChannel = channels.find(c => c.url === currentNegotiationId);
 
         store.dispatch(sendbirdActionCreators.setChannels(channels));
 
-        if (currentNegotiationId) {
-          const channelUrl = `sendbird_group_channel_${currentNegotiationId}`;
-          const currentChannel = channels.find(c => c.url === channelUrl);
-
-          store.dispatch(appActionCreators.setCurrentNegotiation(currentChannel));
+        if (currentChannel) {
+          store.dispatch(appActionCreators.setCurrentNegotiation(currentChannel.url));
         }
       })
       .catch((error) => { throw error; });
@@ -58,10 +62,10 @@ export default store => next => (action) => {
 
       break;
     case appActions.SELECT_NEGOTIATION:
-      store.dispatch(push(`/${action.negotiationId.slice(23)}`));
+      store.dispatch(push(`/${action.negotiationId}`));
       break;
     case appActions.SEND_MESSAGE: {
-      const channelUrl = store.getState().app.currentNegotiation.url;
+      const channelUrl = store.getState().app.currentNegotiation.id;
 
       sendMessage(channelUrl, action.message)
       .then((message) => {
@@ -70,11 +74,20 @@ export default store => next => (action) => {
       })
       .then((channel) => {
         console.log(channel);
-        store.dispatch(appActionCreators.setCurrentNegotiation(channel));
+        store.dispatch(appActionCreators.setCurrentNegotiation(channel.url));
       })
       .catch((error) => { throw error; });
       break;
     }
+    case appActions.SET_CURRENT_NEGOTIATION:
+      console.log(appActions.SET_CURRENT_NEGOTIATION);
+      getMessages(action.currentNegotiation.id)
+      .then((messages) => {
+        console.log(messages);
+        store.dispatch(appActionCreators.setMessages(messages));
+      })
+      .catch((error) => { throw error; });
+      break;
     default:
   }
 

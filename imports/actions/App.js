@@ -8,7 +8,10 @@ const initialState = {
   },
   onlineUsers: [],
   negotiations: [],
-  currentNegotiation: {},
+  currentNegotiation: {
+    id: undefined, // sendbird channel url
+    messages: [],
+  },
 };
 
 export const actions = {
@@ -16,6 +19,7 @@ export const actions = {
   SELECT_NEGOTIATION: 'optune-negotiator/App/SELECT_NEGOTIATION',
   LOAD_NEGOTIATION: 'optune-negotiator/App/LOAD_NEGOTIATION',
   SET_CURRENT_NEGOTIATION: 'optune-negotiator/App/SET_CURRENT_NEGOTIATION',
+  SET_MESSAGES: 'optune-negotiator/App/SET_MESSAGES',
   AUTHENTICATE: 'optune-negotiator/App/AUTHENTICATE',
   DEAUTHENTICATE: 'optune-negotiator/App/DEAUTHENTICATE',
   SET_ONLINE_USERS: 'optune-negotiator/App/SET_ONLINE_USERS',
@@ -56,9 +60,15 @@ export const actionCreators = {
     type: actions.LOAD_NEGOTIATION,
     currentNegotiation: { id },
   }),
-  setCurrentNegotiation: currentNegotiation => ({
+  setCurrentNegotiation: currentNegotiationId => ({
     type: actions.SET_CURRENT_NEGOTIATION,
-    currentNegotiation,
+    currentNegotiation: {
+      id: currentNegotiationId,
+    },
+  }),
+  setMessages: messages => ({
+    type: actions.SET_MESSAGES,
+    messages,
   }),
   sendMessage: message => ({
     type: actions.SEND_MESSAGE,
@@ -83,6 +93,14 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         ...params,
+      };
+    case actions.SET_MESSAGES:
+      return {
+        ...state,
+        currentNegotiation: {
+          id: state.currentNegotiation.id,
+          messages: params.messages,
+        },
       };
     default:
       return state;
