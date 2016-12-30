@@ -22,7 +22,18 @@ export default store => next => (action) => {
         return getChannels();
       })
       .then((channels) => {
+        const currentNegotiationId = store.getState().app.currentNegotiation.id;
+
         store.dispatch(sendbirdActionCreators.setChannels(channels));
+
+        if (currentNegotiationId) {
+          const channelUrl = `sendbird_group_channel_${currentNegotiationId}`;
+          const currentChannel = channels.find(c => c.url === channelUrl);
+
+          console.log(channels[0].url, channelUrl, currentChannel);
+
+          store.dispatch(appActionCreators.setCurrentNegotiation(currentChannel));
+        }
       })
       .catch((error) => { throw error; });
 
@@ -41,20 +52,14 @@ export default store => next => (action) => {
           },
         };
       })));
+
       break;
     case appActions.CREATE_NEGOTIATION:
       createChannel([store.getState().app.user.id, action.negotiantId]);
 
       break;
     case appActions.SELECT_NEGOTIATION:
-      store.dispatch(push(`/${action.negotiationId.slice(23, -1)}`));
-      break;
-    case appActions.LOAD_NEGOTIATION:
-      /*console.log(channelsCache);
-
-      store.dispatch(appActionCreators.setCurrentNegotiation(channelsCache.find(c =>
-        c.url === `sendbird_group_channel_${action.negotiationId}`)));
-      */
+      store.dispatch(push(`/${action.negotiationId.slice(23)}`));
       break;
     default:
   }

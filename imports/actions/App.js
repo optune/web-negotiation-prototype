@@ -51,9 +51,9 @@ export const actionCreators = {
     type: actions.SET_NEGOTIATIONS,
     negotiations,
   }),
-  loadNegotiation: negotiationId => ({
+  loadNegotiation: id => ({
     type: actions.LOAD_NEGOTIATION,
-    negotiationId,
+    currentNegotiation: { id },
   }),
   setCurrentNegotiation: currentNegotiation => ({
     type: actions.SET_CURRENT_NEGOTIATION,
@@ -69,9 +69,11 @@ export const reducer = (state = initialState, action) => {
   switch (type) {
     case actions.SET_ONLINE_USERS:
     case actions.SET_NEGOTIATIONS:
+    case actions.SET_CURRENT_NEGOTIATION:
     case actions.AUTHENTICATE:
     case actions.CREATE_NEGOTIATION:
     case actions.SELECT_NEGOTIATION:
+    case actions.LOAD_NEGOTIATION:
     case actions.DEAUTHENTICATE:
       return {
         ...state,

@@ -36,3 +36,15 @@ export const getChannels = () => (
     }
   })
 );
+
+export const createChannel = participants => (
+  new Promise((resolve, reject) => {
+    api.GroupChannel.createChannelWithUserIds(
+      participants, true, null, null, { test: 123 },
+      (channel, error) => {
+        if (error) reject(error);
+        else resolve(channel);
+      },
+    );
+  })
+);
