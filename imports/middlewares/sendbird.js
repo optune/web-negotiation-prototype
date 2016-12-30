@@ -12,11 +12,12 @@ import {
 
 import {
   connect,
-  getChannels,
-  getChannel,
   createChannel,
-  sendMessage,
+  getChannel,
+  getChannels,
   getMessages,
+  leaveChannel,
+  sendMessage,
 } from '../utils/sendbird.js';
 
 
@@ -108,6 +109,17 @@ export default store => next => (action) => {
         })
         .catch((error) => { throw error; });
       }
+      break;
+    case appActions.DECLINE_NEGOTIATION:
+      leaveChannel(action.id)
+      .then((response) => {
+        console.log(response);
+        return getChannels();
+      })
+      .then((channels) => {
+        store.dispatch(sendbirdActionCreators.setChannels(channels));
+      })
+      .catch((error) => { throw error; });
       break;
     default:
   }

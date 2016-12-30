@@ -89,3 +89,15 @@ export const getMessages = channelUrl => (
     })
   ))
 );
+
+export const leaveChannel = channelUrl => (
+  getChannel(channelUrl)
+  .then(channel => (
+    new Promise((resolve, reject) => {
+      channel.leave((response, error) => {
+        if (error) reject(error);
+        else resolve(response);
+      });
+    })
+  ))
+);

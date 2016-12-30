@@ -19,6 +19,7 @@ export const actions = {
   AUTHENTICATE: 'optune-negotiator/App/AUTHENTICATE',
   CREATE_NEGOTIATION: 'optune-negotiator/App/CREATE_NEGOTIATION',
   DEAUTHENTICATE: 'optune-negotiator/App/DEAUTHENTICATE',
+  DECLINE_NEGOTIATION: 'optune-negotiator/App/DECLINE_NEGOTIATION',
   LOAD_NEGOTIATION: 'optune-negotiator/App/LOAD_NEGOTIATION',
   LOGIN: 'optune-negotiator/App/LOGIN',
   LOGOUT: 'optune-negotiator/App/LOGOUT',
@@ -49,6 +50,10 @@ export const actionCreators = {
   deauthenticate: () => ({
     type: actions.DEAUTHENTICATE,
     ...initialState,
+  }),
+  declineNegotiation: id => ({
+    type: actions.DECLINE_NEGOTIATION,
+    id,
   }),
   setOnlineUsers: onlineUsers => ({
     type: actions.SET_ONLINE_USERS,
@@ -101,6 +106,10 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         ...params,
+      };
+    case actions.DECLINE_NEGOTIATION:
+      return {
+        ...state,
       };
     case actions.SET_CURRENT_NEGOTIATION:
       return {
