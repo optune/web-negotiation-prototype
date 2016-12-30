@@ -18,21 +18,24 @@ import Login from '../pages/login.jsx';
 import Negotiation from '../pages/negotiation.jsx';
 
 
-const store = createStore(
-  combineReducers({
-    app,
-    sendbird,
-    routing: routerReducer,
-  }),
-  compose(
-    applyMiddleware(
-      routerMiddleware(browserHistory),
-      meteorMiddleware,
-      sendbirdMiddleware,
-    ),
-    window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
-  ),
+const reducers = combineReducers({
+  app,
+  sendbird,
+  routing: routerReducer,
+});
+
+const middlewares = applyMiddleware(
+  routerMiddleware(browserHistory),
+  meteorMiddleware,
+  sendbirdMiddleware,
 );
+
+const composition = compose(
+  middlewares,
+  window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
+);
+
+const store = createStore(reducers, composition);
 
 const history = syncHistoryWithStore(browserHistory, store);
 

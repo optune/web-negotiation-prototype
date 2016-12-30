@@ -30,8 +30,6 @@ export default store => next => (action) => {
           const channelUrl = `sendbird_group_channel_${currentNegotiationId}`;
           const currentChannel = channels.find(c => c.url === channelUrl);
 
-          console.log(channels[0].url, channelUrl, currentChannel);
-
           store.dispatch(appActionCreators.setCurrentNegotiation(currentChannel));
         }
       })
