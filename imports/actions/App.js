@@ -64,6 +64,7 @@ export const actionCreators = {
     type: actions.SET_CURRENT_NEGOTIATION,
     currentNegotiation: {
       id: currentNegotiationId,
+      messages: [],
     },
   }),
   setMessages: messages => ({

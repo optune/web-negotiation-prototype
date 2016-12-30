@@ -66,6 +66,7 @@ export default store => next => (action) => {
       break;
     case appActions.SEND_MESSAGE: {
       const channelUrl = store.getState().app.currentNegotiation.id;
+      // TODO: Optimistic display of sent message
 
       sendMessage(channelUrl, action.message)
       .then((message) => {
@@ -73,18 +74,24 @@ export default store => next => (action) => {
         return getChannel(channelUrl);
       })
       .then((channel) => {
-        console.log(channel);
         store.dispatch(appActionCreators.setCurrentNegotiation(channel.url));
       })
       .catch((error) => { throw error; });
       break;
     }
     case appActions.SET_CURRENT_NEGOTIATION:
-      console.log(appActions.SET_CURRENT_NEGOTIATION);
       getMessages(action.currentNegotiation.id)
       .then((messages) => {
         console.log(messages);
-        store.dispatch(appActionCreators.setMessages(messages));
+        store.dispatch(appActionCreators.setMessages(
+          messages
+          .sort((a, b) => a.createdAt > b.createdAt)
+          .map(msg => ({
+            text: msg.message,
+            mine: msg.sender.userId === store.getState().app.user.id,
+            id: `${msg.messageId}`,
+          })),
+        ));
       })
       .catch((error) => { throw error; });
       break;
