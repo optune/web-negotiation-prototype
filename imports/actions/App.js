@@ -15,18 +15,19 @@ const initialState = {
 };
 
 export const actions = {
-  CREATE_NEGOTIATION: 'optune-negotiator/App/CREATE_NEGOTIATION',
-  SELECT_NEGOTIATION: 'optune-negotiator/App/SELECT_NEGOTIATION',
-  LOAD_NEGOTIATION: 'optune-negotiator/App/LOAD_NEGOTIATION',
-  SET_CURRENT_NEGOTIATION: 'optune-negotiator/App/SET_CURRENT_NEGOTIATION',
-  SET_MESSAGES: 'optune-negotiator/App/SET_MESSAGES',
+  ADD_OPTIMISTIC_MESSAGE: 'optune-negotiator/App/ADD_OPTIMISTIC_MESSAGE',
   AUTHENTICATE: 'optune-negotiator/App/AUTHENTICATE',
+  CREATE_NEGOTIATION: 'optune-negotiator/App/CREATE_NEGOTIATION',
   DEAUTHENTICATE: 'optune-negotiator/App/DEAUTHENTICATE',
-  SET_ONLINE_USERS: 'optune-negotiator/App/SET_ONLINE_USERS',
-  SET_NEGOTIATIONS: 'optune-negotiator/App/SET_NEGOTIATIONS',
-  SEND_MESSAGE: 'optune-negotiator/App/SEND_MESSAGE',
+  LOAD_NEGOTIATION: 'optune-negotiator/App/LOAD_NEGOTIATION',
   LOGIN: 'optune-negotiator/App/LOGIN',
   LOGOUT: 'optune-negotiator/App/LOGOUT',
+  SELECT_NEGOTIATION: 'optune-negotiator/App/SELECT_NEGOTIATION',
+  SEND_MESSAGE: 'optune-negotiator/App/SEND_MESSAGE',
+  SET_CURRENT_NEGOTIATION: 'optune-negotiator/App/SET_CURRENT_NEGOTIATION',
+  SET_MESSAGES: 'optune-negotiator/App/SET_MESSAGES',
+  SET_NEGOTIATIONS: 'optune-negotiator/App/SET_NEGOTIATIONS',
+  SET_ONLINE_USERS: 'optune-negotiator/App/SET_ONLINE_USERS',
 };
 
 export const actionCreators = {
@@ -58,14 +59,11 @@ export const actionCreators = {
   }),
   loadNegotiation: id => ({
     type: actions.LOAD_NEGOTIATION,
-    currentNegotiation: { id },
+    currentNegotiation: { id, messages: [] },
   }),
-  setCurrentNegotiation: currentNegotiationId => ({
+  setCurrentNegotiation: id => ({
     type: actions.SET_CURRENT_NEGOTIATION,
-    currentNegotiation: {
-      id: currentNegotiationId,
-      messages: [],
-    },
+    currentNegotiation: { id },
   }),
   setMessages: messages => ({
     type: actions.SET_MESSAGES,
@@ -73,6 +71,10 @@ export const actionCreators = {
   }),
   sendMessage: message => ({
     type: actions.SEND_MESSAGE,
+    message,
+  }),
+  addOptimisticMessage: message => ({
+    type: actions.ADD_OPTIMISTIC_MESSAGE,
     message,
   }),
   login: () => ({ type: actions.LOGIN }),
@@ -85,7 +87,6 @@ export const reducer = (state = initialState, action) => {
   switch (type) {
     case actions.SET_ONLINE_USERS:
     case actions.SET_NEGOTIATIONS:
-    case actions.SET_CURRENT_NEGOTIATION:
     case actions.AUTHENTICATE:
     case actions.CREATE_NEGOTIATION:
     case actions.SELECT_NEGOTIATION:
@@ -95,12 +96,37 @@ export const reducer = (state = initialState, action) => {
         ...state,
         ...params,
       };
+    case actions.SET_CURRENT_NEGOTIATION:
+      return {
+        ...state,
+        currentNegotiation: {
+          id: params.currentNegotiation.id,
+          messages: state.currentNegotiation.messages,
+        },
+      };
     case actions.SET_MESSAGES:
       return {
         ...state,
         currentNegotiation: {
           id: state.currentNegotiation.id,
           messages: params.messages,
+        },
+      };
+    case actions.ADD_OPTIMISTIC_MESSAGE:
+      console.log(actions.ADD_OPTIMISTIC_MESSAGE, action, state.currentNegotiation.messages);
+
+      return {
+        ...state,
+        currentNegotiation: {
+          id: state.currentNegotiation.id,
+          messages: [
+            ...state.currentNegotiation.messages,
+            {
+              text: action.message,
+              mine: true,
+              id: 'optimistic',
+            },
+          ],
         },
       };
     default:

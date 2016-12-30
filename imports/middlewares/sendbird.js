@@ -1,4 +1,6 @@
 import { push } from 'react-router-redux';
+import { reset as resetForm, change as changeForm } from 'redux-form';
+
 import {
   actions as appActions,
   actionCreators as appActionCreators,
@@ -66,17 +68,19 @@ export default store => next => (action) => {
       break;
     case appActions.SEND_MESSAGE: {
       const channelUrl = store.getState().app.currentNegotiation.id;
-      // TODO: Optimistic display of sent message
+
+      store.dispatch(resetForm('negotiation'));
+      store.dispatch(appActionCreators.addOptimisticMessage(action.message));
 
       sendMessage(channelUrl, action.message)
-      .then((message) => {
-        console.log(message);
-        return getChannel(channelUrl);
-      })
+      .then(() => getChannel(channelUrl))
       .then((channel) => {
         store.dispatch(appActionCreators.setCurrentNegotiation(channel.url));
       })
-      .catch((error) => { throw error; });
+      .catch((error) => {
+        store.dispatch(changeForm('negotiation', 'message', action.message));
+        throw error;
+      });
       break;
     }
     case appActions.SET_CURRENT_NEGOTIATION:

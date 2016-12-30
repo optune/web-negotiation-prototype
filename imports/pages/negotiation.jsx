@@ -8,14 +8,14 @@ import { actionCreators } from '../actions/App.js';
 
 const Negotiation = props => (
   <form className="flex-center-middle filling" onSubmit={props.handleSubmit(props.sendMessage)}>
-    <div>
+    <div className="element-width">
       <ul>
         {props.messages.map(msg => (
           <li
             key={msg.id}
-            className={classNames('message push bottom micro', {
-              right: msg.mine,
-              left: !msg.mine,
+            className={classNames('message', {
+              right: !msg.mine,
+              left: msg.mine,
             })}
           >{msg.text}</li>
         ))}
@@ -48,10 +48,6 @@ Negotiation.defaultProps = {
 
 const NegotiationForm = reduxForm({
   form: 'negotiation',
-  /*onSubmit(values) {
-    console.log(values);
-  },
-  */
 })(Negotiation);
 
 class NegotiationLifecycle extends React.Component {
