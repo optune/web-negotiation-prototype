@@ -1,77 +1,61 @@
-import { actions, actionCreators } from '../actions/App.js';
-import sendbird from '../utils/sendbird.js';
+import { push } from 'react-router-redux';
+import {
+  actions as appActions,
+  actionCreators as appActionCreators,
+} from '../actions/App.js';
+import {
+  actions as sendbirdActions,
+  actionCreators as sendbirdActionCreators,
+} from '../actions/sendbird.js';
+
+import { connect, getChannels, createChannel } from '../utils/sendbird.js';
 
 
 export default store => next => (action) => {
   switch (action.type) {
-    case actions.AUTHENTICATE:
+    case appActions.AUTHENTICATE:
 
-      (new Promise((resolve, reject) => {
-        sendbird.connect(action.user.id, (user, error) => {
-          if (error) reject(error); else resolve(user);
-        });
-      })).then(user => Promise.all([
+      connect(action.user.id, action.user.name, action.user.profilePicUrl)
+      .then((user) => {
+        store.dispatch(sendbirdActionCreators.connect(user));
 
-        (new Promise((resolve, reject) => {
-          console.log('received sendbird user:', user);
-
-          sendbird.updateCurrentUserInfo(
-            action.user.name,
-            action.user.profilePicUrl,
-            (response, error) => {
-              if (error) reject(error); else resolve(response);
-            },
-          );
-        })),
-
-        (new Promise((resolve, reject) => {
-          const channelListQuery = sendbird.GroupChannel.createMyGroupChannelListQuery();
-          channelListQuery.includeEmpty = true;
-
-          if (channelListQuery.hasNext) {
-            channelListQuery.next((channelList, error) => {
-              if (error) reject(error);
-              else {
-                console.log('received channels', channelList);
-
-                store.dispatch(actionCreators.setNegotiations(channelList.map((channel) => {
-                  const negotiant = channel.members.filter(c => c.userId !== action.user.id)[0];
-
-                  console.log(negotiant, action.user.id);
-
-                  return {
-                    id: channel.url,
-                    negotiant: {
-                      name: negotiant.nickname,
-                      id: negotiant.userId,
-                      profilePicUrl: negotiant.profileUrl,
-                    },
-                  };
-                })));
-              }
-            });
-          }
-        })),
-
-      ])).catch((error) => { throw error; });
+        return getChannels();
+      })
+      .then((channels) => {
+        store.dispatch(sendbirdActionCreators.setChannels(channels));
+      })
+      .catch((error) => { throw error; });
 
       break;
-    case actions.CREATE_NEGOTIATION: {
-      sendbird.GroupChannel.createChannelWithUserIds(
-        [Meteor.user()._id, action.negotiantId],
-        true,
-        null,
-        null,
-        {
-          test: 123,
-        },
-        (channel, error) => {
-          console.log(channel, error);
-        },
-      );
+    case sendbirdActions.SET_CHANNELS:
+      store.dispatch(appActionCreators.setNegotiations(action.channels.map((channel) => {
+        const user = store.getState().app.user;
+        const negotiant = channel.members.find(c => c.userId !== user.id);
+
+        return {
+          id: channel.url,
+          negotiant: {
+            name: negotiant.nickname,
+            id: negotiant.userId,
+            profilePicUrl: negotiant.profileUrl,
+          },
+        };
+      })));
+      break;
+    case appActions.CREATE_NEGOTIATION:
+      createChannel([store.getState().app.user.id, action.negotiantId]);
 
       break;
-    }
+    case appActions.SELECT_NEGOTIATION:
+      store.dispatch(push(`/${action.negotiationId.slice(23, -1)}`));
+      break;
+    case appActions.LOAD_NEGOTIATION:
+      /*console.log(channelsCache);
+
+      store.dispatch(appActionCreators.setCurrentNegotiation(channelsCache.find(c =>
+        c.url === `sendbird_group_channel_${action.negotiationId}`)));
+      */
+      break;
     default:
   }
 

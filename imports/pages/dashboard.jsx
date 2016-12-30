@@ -19,6 +19,7 @@ const Dashboard = props => (
                 name={negotation.negotiant.name}
                 key={negotation.id}
                 profilePic={negotation.negotiant.profilePicUrl}
+                onClick={() => props.selectNegotiation(negotation.id)}
               />
             ))}
           </ul>
@@ -57,7 +58,10 @@ Dashboard.propTypes = {
   logout: React.PropTypes.func.isRequired,
   user: userPropType.isRequired,
   onlineUsers: React.PropTypes.arrayOf(userPropType),
-  negotiations: React.PropTypes.array,
+  negotiations: React.PropTypes.arrayOf(React.PropTypes.shape({
+    id: React.PropTypes.string,
+    negotiant: userPropType,
+  })),
 };
 
 const mapStateToProps = state => ({
@@ -66,6 +70,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   createNegotiation: negotiantId => dispatch(actionCreators.createNegotiation(negotiantId)),
+  selectNegotiation: negotiationId => dispatch(actionCreators.selectNegotiation(negotiationId)),
   logout: () => dispatch(actionCreators.logout()),
 });
 

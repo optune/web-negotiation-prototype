@@ -9,16 +9,19 @@ import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import { syncHistoryWithStore, routerReducer, routerMiddleware } from 'react-router-redux';
 
 import { reducer as app, actionCreators as appActionCreators } from '../actions/App.js';
+import { reducer as sendbird } from '../actions/sendbird.js';
 import meteorMiddleware from '../middlewares/meteor.js';
 import sendbirdMiddleware from '../middlewares/sendbird.js';
 
 import Dashboard from '../pages/dashboard.jsx';
 import Login from '../pages/login.jsx';
+import Negotiation from '../pages/negotiation.jsx';
 
 
 const store = createStore(
   combineReducers({
     app,
+    sendbird,
     routing: routerReducer,
   }),
   compose(
@@ -69,6 +72,7 @@ Meteor.startup(() => {
         <Route path="/" /* component={Layout} */>
           <IndexRoute component={Dashboard} onEnter={requireAuth} />
           <Route path="login" component={Login} />
+          <Route path=":id" component={Negotiation} />
         </Route>
       </Router>
     </Provider>,

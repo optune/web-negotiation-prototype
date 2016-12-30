@@ -13,7 +13,7 @@ export default store => next => (action) => {
       Meteor.logout(() => store.dispatch(actionCreators.deauthenticate()));
       break;
     case actions.AUTHENTICATE:
-      store.dispatch(push('/'));
+      // store.dispatch(push('/'));
       break;
     case actions.DEAUTHENTICATE:
       store.dispatch(push('/login'));
