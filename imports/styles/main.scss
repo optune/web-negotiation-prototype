@@ -1,5 +1,57 @@
+.flex-container {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  -webkit-flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.flex-item{
+  align-self: center;
+}
+
+.messageText{
+  width: 90%;
+}
+
+.sendIcon{
+  width: 10%;
+  text-align: center;
+}
+
 input[type=range] {
   width: 90%;
+}
+
+.whitebox {
+  background-color: white;
+  width: 100%;
+}
+
+.backgroundbar {
+  background-color: #D8D8D8;
+  width: 100%;
+  height: 4px;
+  position: absolute;
+}
+
+.statusbar {
+  background-color: black;
+  height: 4px;
+  position: absolute;
+  width: 50%;
+}
+
+.anrede {
+  float: left;
+  width: 40px;
 }
 
 .onoffswitch {

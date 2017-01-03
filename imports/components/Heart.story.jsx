@@ -6,12 +6,12 @@ import Heart from './Heart.jsx';
 storiesOf('element/Heart', module)
 .add('Heart', () =>
   (
-    <Heart size={24} color="#000000" />
+    <Heart size={24} />
   ),
 )
 .add('Heart Active', () =>
   (
-    <Heart size={24} color="#27E200" />
+    <Heart size={24} active />
   ),
 );
 
