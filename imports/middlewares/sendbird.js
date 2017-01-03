@@ -1,5 +1,6 @@
 import { push } from 'react-router-redux';
 import { reset as resetForm, change as changeForm } from 'redux-form';
+import moment from 'moment';
 
 import {
   actions as appActions,
@@ -23,9 +24,12 @@ import {
 
 export default store => next => (action) => {
   const mapSendbirdMessage = msg => ({
-    text: msg.message,
-    mine: msg.sender.userId === store.getState().app.user.id,
+    body: msg.message,
+    self: msg.sender.userId === store.getState().app.user.id,
     id: `${msg.messageId}`,
+    date: moment(msg.createdAt).format('D.M.Y'),
+    time: moment(msg.createdAt).format('HH:mm'),
+    userPicture: msg.sender.profileUrl,
   });
 
   switch (action.type) {

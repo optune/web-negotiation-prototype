@@ -5,22 +5,13 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import { actionCreators } from '../actions/App.js';
+import MessageBox from '../components/MessageBox.jsx';
 
 
 const Negotiation = props => (
   <form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
     <div className="element-width">
-      <ul>
-        {props.messages.map(msg => (
-          <li
-            key={msg.id}
-            className={classNames('message', {
-              right: !msg.mine,
-              left: msg.mine,
-            })}
-          >{msg.text}</li>
-        ))}
-      </ul>
+      <MessageBox messages={props.messages} />
       <p>
         <Field name="message" component="textarea" type="text" placeholder="Your message" />
       </p>
@@ -39,11 +30,9 @@ Negotiation.propTypes = {
   decline: React.PropTypes.func,
   pristine: React.PropTypes.bool,
   submitting: React.PropTypes.bool,
-  messages: React.PropTypes.arrayOf(React.PropTypes.shape({
-    text: React.PropTypes.string,
-    mine: React.PropTypes.bool,
-    id: React.PropTypes.string,
-  })),
+  messages: React.PropTypes.arrayOf(
+    MessageBox.messagePropTypes,
+  ),
 };
 
 Negotiation.defaultProps = {

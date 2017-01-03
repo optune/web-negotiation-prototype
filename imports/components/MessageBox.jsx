@@ -44,14 +44,19 @@ const MessageBox = props => (
   </div>
 );
 
+MessageBox.messagePropTypes = React.PropTypes.shape({
+  id: React.PropTypes.string,
+  self: React.PropTypes.bool,
+  body: React.PropTypes.string,
+  userPicture: React.PropTypes.string,
+  date: React.PropTypes.string,
+  time: React.PropTypes.string,
+});
+
 MessageBox.propTypes = {
-  messages: React.PropTypes.arrayOf(React.PropTypes.shape({
-    self: React.PropTypes.bool,
-    body: React.PropTypes.string,
-    userPicture: React.PropTypes.string,
-    date: React.PropTypes.string,
-    time: React.PropTypes.string,
-  })),
+  messages: React.PropTypes.arrayOf(
+    MessageBox.messagePropTypes,
+  ),
 };
 
 MessageBox.defaultProps = {
