@@ -9,7 +9,7 @@ import Avatar from './Avatar.jsx';
 
 
 const MessageBox = props => (
-  <div>
+  <div className="message-box thrust-out">
     {props.messages.map(message => (
       <div key={message.id}>
         <div
