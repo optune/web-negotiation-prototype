@@ -1,5 +1,4 @@
 import React from 'react';
-import { Field } from 'redux-form';
 
 
 const MessageInput = props => (
@@ -8,10 +7,9 @@ const MessageInput = props => (
       <div className="label">{props.label}</div>
       <div className="messageBox flex-container">
         <div className="messageText flex-item">
-          <Field
+          <textarea
+            {...props.input}
             className="form-field textarea small"
-            component="textarea"
-            name={props.name}
             placeholder={props.hint}
           />
         </div>
@@ -35,6 +33,7 @@ MessageInput.propTypes = {
   label: React.PropTypes.string,
   hint: React.PropTypes.string,
   onClick: React.PropTypes.func,
+  input: React.PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 MessageInput.defaultProps = {

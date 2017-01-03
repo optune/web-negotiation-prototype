@@ -1,18 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { reduxForm, Form } from 'redux-form';
+import { reduxForm, Form, Field } from 'redux-form';
 import { connect } from 'react-redux';
 
 import { actionCreators } from '../actions/App.js';
+import Header from '../components/Header.jsx';
 import MessageBox from '../components/MessageBox.jsx';
 import MessageInput from '../components/MessageInput.jsx';
 
+/* <!-- <MessageInput name="message"   /> */
 
 const Negotiation = props => (
   <Form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
     <div className="element-width">
+      <Header tofrom="To" name="Marc Promoter" />
+      <Header tofrom="From" name="Fernando Artist (Agent Tiffany)" />
       <MessageBox messages={props.messages} />
-      <MessageInput name="message" placeholder="Your message" onClick={() => props.submit()} />
+
+      <Field name="message" component={MessageInput} placeholder="Your message" onClick={props.submit} />
+
       <p>
         <button type="submit" className="push bottom micro" disabled={props.pristine || props.submitting}>Send</button>
         <Link className="button small" to="/">Back</Link>
