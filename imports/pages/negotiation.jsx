@@ -20,7 +20,6 @@ const Negotiation = props => (
       <Field name="message" component={MessageInput} placeholder="Your message" onClick={props.submit} />
 
       <p>
-        <button type="submit" className="push bottom micro" disabled={props.pristine || props.submitting}>Send</button>
         <Link className="button small" to="/">Back</Link>
         <button onClick={props.decline} className="button-secondary small hover-warning">Decline</button>
       </p>
@@ -33,8 +32,6 @@ Negotiation.propTypes = {
   submit: React.PropTypes.func,
   sendMessage: React.PropTypes.func,
   decline: React.PropTypes.func,
-  pristine: React.PropTypes.bool,
-  submitting: React.PropTypes.bool,
   messages: React.PropTypes.arrayOf(
     MessageBox.messagePropTypes,
   ),

@@ -2,6 +2,8 @@ import { push } from 'react-router-redux';
 import { reset as resetForm, change as changeForm } from 'redux-form';
 import moment from 'moment';
 
+import NegotiationStatus from '../constants/NegotiationStatus.js';
+
 import {
   actions as appActions,
   actionCreators as appActionCreators,
@@ -17,7 +19,7 @@ import {
   getChannel,
   getChannels,
   getMessages,
-  leaveChannel,
+  updateMetaData,
   sendMessage,
 } from '../utils/sendbird.js';
 
@@ -52,6 +54,8 @@ export default store => next => (action) => {
 
           store.dispatch(sendbirdActionCreators.setChannels(channels));
 
+          console.log(channels);
+
           if (currentChannel) {
             store.dispatch(appActionCreators.setCurrentNegotiation(currentChannel.url));
           }
@@ -76,7 +80,10 @@ export default store => next => (action) => {
 
       break;
     case appActions.CREATE_NEGOTIATION:
-      createChannel([store.getState().app.user.id, action.negotiantId])
+      createChannel(
+        [store.getState().app.user.id, action.negotiantId],
+        { status: NegotiationStatus.PENDING },
+      )
       .catch((error) => { throw error; });
 
       break;
@@ -115,7 +122,7 @@ export default store => next => (action) => {
       }
       break;
     case appActions.DECLINE_NEGOTIATION:
-      leaveChannel(action.id)
+      updateMetaData(action.id, { status: NegotiationStatus.DECLINED })
       .then((response) => {
         console.log(response);
         return getChannels();

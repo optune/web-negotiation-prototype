@@ -3,10 +3,13 @@ import { Meteor } from 'meteor/meteor';
 import SendBird from 'sendbird';
 
 
+const metaKeys = ['status'];
+
 export const api = new SendBird({
   appId: Meteor.settings.public.SENDBIRD_APP_ID,
 });
 
+// expose api to browser for debugging
 window.sendbird = api;
 
 export const connect = (id, name, profilePicUrl, onMessageReceived) => (
@@ -30,6 +33,15 @@ export const connect = (id, name, profilePicUrl, onMessageReceived) => (
   }),
 );
 
+const getChannelMetaData = channel => new Promise((resolve, reject) => {
+  channel.getMetaData(metaKeys, (response, error) => {
+    const enhancedChannel = channel;
+    enhancedChannel.metaData = response;
+    if (error) reject(error);
+    else resolve(enhancedChannel);
+  });
+});
+
 export const getChannels = () => (
   new Promise((resolve, reject) => {
     const channelListQuery = api.GroupChannel.createMyGroupChannelListQuery();
@@ -42,6 +54,9 @@ export const getChannels = () => (
       });
     }
   })
+  .then(channels =>
+    Promise.all(channels.map(getChannelMetaData)),
+  )
 );
 
 export const getChannel = channelUrl => (
@@ -51,12 +66,13 @@ export const getChannel = channelUrl => (
       else resolve(channel);
     });
   })
+  .then(getChannelMetaData)
 );
 
-export const createChannel = participants => (
+export const createChannel = (participants, metaData) => (
   new Promise((resolve, reject) => {
     api.GroupChannel.createChannelWithUserIds(
-      participants, true, null, null, { test: 123 },
+      participants, true, null, null, metaData,
       (channel, error) => {
         if (error) reject(error);
         else resolve(channel);
@@ -65,11 +81,11 @@ export const createChannel = participants => (
   })
 );
 
-export const sendMessage = (channelUrl, message) => (
+export const sendMessage = (channelUrl, message, metaData) => (
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
-      channel.sendUserMessage(message, { data: 'test' }, 'TEXT_MESSAGE', (result, error) => {
+      channel.sendUserMessage(message, metaData, 'TEXT_MESSAGE', (result, error) => {
         if (error) reject(error);
         else resolve(result);
       });
@@ -90,11 +106,26 @@ export const getMessages = channelUrl => (
   ))
 );
 
-export const leaveChannel = channelUrl => (
+export const updateMetaData = (channelUrl, metaData) => (
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
-      channel.leave((response, error) => {
+      channel.updateMetaData(metaData, true, (response, error) => {
+        if (error) reject(error);
+        else resolve(response, channel);
+      });
+    })
+  ))
+  .then(() => (
+    getChannel(channelUrl)
+  ))
+  .then(channel => (
+    new Promise((resolve, reject) => {
+      console.log(channel);
+
+      channel.getMetaData(Object.keys(metaData), (response, error) => {
+        console.log(response);
+
         if (error) reject(error);
         else resolve(response);
       });
