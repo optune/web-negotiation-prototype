@@ -1,31 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm, Form } from 'redux-form';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 
 import { actionCreators } from '../actions/App.js';
 import MessageBox from '../components/MessageBox.jsx';
+import MessageInput from '../components/MessageInput.jsx';
 
 
 const Negotiation = props => (
-  <form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
+  <Form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
     <div className="element-width">
       <MessageBox messages={props.messages} />
-      <p>
-        <Field name="message" component="textarea" type="text" placeholder="Your message" />
-      </p>
+      <MessageInput name="message" placeholder="Your message" onClick={() => props.submit()} />
       <p>
         <button type="submit" className="push bottom micro" disabled={props.pristine || props.submitting}>Send</button>
         <Link className="button small" to="/">Back</Link>
         <button onClick={props.decline} className="button-secondary small hover-warning">Decline</button>
       </p>
     </div>
-  </form>
+  </Form>
 );
 
 Negotiation.propTypes = {
   handleSubmit: React.PropTypes.func,
+  submit: React.PropTypes.func,
   sendMessage: React.PropTypes.func,
   decline: React.PropTypes.func,
   pristine: React.PropTypes.bool,
