@@ -20,27 +20,24 @@ const MessageBox = props => (
         >
           <div
             className={classNames('edge', {
-              right: message.self,
-              left: !message.self,
+              right: !message.self,
+              left: message.self,
             })}
           />
           {message.body}
         </div>
         {(() => (!message.self && message.userPicture ?
           <Avatar
-            className="right"
+            className="left"
             img={message.userPicture}
             size="small"
           /> : undefined)
         )()}
         <br className="clear" />
         <small
-          className={classNames('message-meta', {
-            right: message.self,
-            left: !message.self,
-          })}
+          className={classNames('message-meta')}
         >
-          <span className="light">{message.date},</span> <strong>{message.time}</strong>
+          <span className="light">{message.date},</span> {message.time}
         </small>
       </div>),
     )}

@@ -26,6 +26,34 @@
   text-align: center;
 }
 
+// Overwrite
+.message.left{
+  float: right;
+  background-color: #D6D3CF;
+  left: -10px;
+}
+.message.right{
+  right: 10px;
+  float: right;
+  background-color: white;
+}
+.message-box{
+  padding-top: 5px;
+  padding-right: 2px;
+  padding-left: 5px;
+  height: 350px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.message-meta{
+  text-align: end;
+  right: 10px;
+  padding-right: 10px;
+}
+.sized.small {
+    width: 35px;
+}
+
 input[type=range] {
   width: 90%;
 }
@@ -33,6 +61,9 @@ input[type=range] {
 .whitebox {
   background-color: white;
   width: 100%;
+  padding: 10px;
+  margin-bottom: 1px;
+  margin-top: 1px;
 }
 
 .backgroundbar {
