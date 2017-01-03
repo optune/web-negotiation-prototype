@@ -18,6 +18,7 @@ const Dashboard = props => (
               <UserCard
                 name={negotation.negotiant.name}
                 key={negotation.id}
+                caption={`status: ${negotation.status}`}
                 profilePic={negotation.negotiant.profilePicUrl}
                 onClick={() => props.selectNegotiation(negotation.id)}
               />
@@ -61,6 +62,7 @@ Dashboard.propTypes = {
   negotiations: React.PropTypes.arrayOf(React.PropTypes.shape({
     id: React.PropTypes.string,
     negotiant: userPropType,
+    status: React.PropTypes.string,
   })),
 };
 

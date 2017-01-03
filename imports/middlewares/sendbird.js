@@ -54,8 +54,6 @@ export default store => next => (action) => {
 
           store.dispatch(sendbirdActionCreators.setChannels(channels));
 
-          console.log(channels);
-
           if (currentChannel) {
             store.dispatch(appActionCreators.setCurrentNegotiation(currentChannel.url));
           }
@@ -70,6 +68,7 @@ export default store => next => (action) => {
 
         return {
           id: channel.url,
+          status: channel.metaData.status,
           negotiant: {
             name: negotiant.nickname,
             id: negotiant.userId,
