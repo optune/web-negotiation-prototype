@@ -1,0 +1,18 @@
+{
+  "private": {
+    "AUTH0_CLIENT_SECRET": "*",
+    "SECRET_KEY": "*"
+  },
+  "public": {
+    "AUTH0_DOMAIN": "optune-dev.eu.auth0.com",
+    "AUTH0_CLIENT_ID": "sGrqWLBYCTy0axFfBAJmEPgiH8dxAsTR",
+    "SENDBIRD_APP_ID": "66993048-CF13-46B7-A35A-D04BA2188548"
+  },
+  "galaxy.meteor.com": {
+    "env": {
+      "MONGO_URL": "tbd",
+      "ROOT_URL": "https://negotiation.optune.me",
+      "MAIL_URL": "optune.me"
+    }
+  }
+}
