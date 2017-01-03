@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 
 import SendBird from 'sendbird';
 
+import MessageType from '../constants/MessageType.js';
+
 
 const metaKeys = ['status'];
 
@@ -28,6 +30,7 @@ export const connect = (id, name, profilePicUrl, onMessageReceived) => (
   )).then(() => {
     const channelHandler = new api.ChannelHandler();
     channelHandler.onMessageReceived = onMessageReceived;
+    channelHandler.onChannelChanged = console.log;
     api.addChannelHandler('HANDLER_ID', channelHandler);
     return user;
   }),
@@ -69,23 +72,40 @@ export const getChannel = channelUrl => (
   .then(getChannelMetaData)
 );
 
+export const updateMetaData = (channelUrl, metaData) => (
+  getChannel(channelUrl)
+  .then(channel => (
+    new Promise((resolve, reject) => {
+      channel.updateMetaData(metaData, true, (response, error) => {
+        if (error) reject(error);
+        else resolve(response, channel);
+      });
+    })
+  ))
+  .then(() => (
+    getChannel(channelUrl)
+  ))
+  // .then((channel) => sendMessage(channel.url, `metadata updated: ${metaData}`, metaData, MessageType.SYSTEM_MESSAGE))
+);
+
 export const createChannel = (participants, metaData) => (
   new Promise((resolve, reject) => {
     api.GroupChannel.createChannelWithUserIds(
-      participants, true, null, null, metaData,
+      participants, false, null, null, null,
       (channel, error) => {
         if (error) reject(error);
         else resolve(channel);
       },
     );
   })
+  .then(channel => updateMetaData(channel.url, metaData))
 );
 
-export const sendMessage = (channelUrl, message, metaData) => (
+export const sendMessage = (channelUrl, message, data, type = MessageType.TEXT_MESSAGE) => (
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
-      channel.sendUserMessage(message, metaData, 'TEXT_MESSAGE', (result, error) => {
+      channel.sendUserMessage(message, data, type, (result, error) => {
         if (error) reject(error);
         else resolve(result);
       });
@@ -101,33 +121,6 @@ export const getMessages = channelUrl => (
       .load(200, true, (messages, error) => {
         if (error) reject(error);
         else resolve(messages);
-      });
-    })
-  ))
-);
-
-export const updateMetaData = (channelUrl, metaData) => (
-  getChannel(channelUrl)
-  .then(channel => (
-    new Promise((resolve, reject) => {
-      channel.updateMetaData(metaData, true, (response, error) => {
-        if (error) reject(error);
-        else resolve(response, channel);
-      });
-    })
-  ))
-  .then(() => (
-    getChannel(channelUrl)
-  ))
-  .then(channel => (
-    new Promise((resolve, reject) => {
-      console.log(channel);
-
-      channel.getMetaData(Object.keys(metaData), (response, error) => {
-        console.log(response);
-
-        if (error) reject(error);
-        else resolve(response);
       });
     })
   ))

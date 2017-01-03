@@ -64,7 +64,7 @@ export default store => next => (action) => {
     case sendbirdActions.SET_CHANNELS:
       store.dispatch(appActionCreators.setNegotiations(action.channels.map((channel) => {
         const user = store.getState().app.user;
-        const negotiant = channel.members.find(c => c.userId !== user.id);
+        const negotiant = channel.members.find(c => c.userId !== user.id) || {};
 
         return {
           id: channel.url,
