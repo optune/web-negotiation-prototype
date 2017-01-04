@@ -70,10 +70,11 @@ export const getChannel = channelUrl => (
   })
 );
 
-export const sendMessage = (channelUrl, message, data, type = MessageType.TEXT_MESSAGE) => (
+export const sendMessage = (channelUrl, message, data, type = MessageType.USER) => (
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
+      console.log(type);
       channel.sendUserMessage(message, data, type, (result, error) => {
         if (error) reject(error);
         else resolve(result);
@@ -91,7 +92,7 @@ export const updateMetaData = (channelUrl, metaData) => (
         else resolve(response, channel);
       });
     })
-    .then(() => sendMessage(channel.url, `metadata updated: ${JSON.stringify(metaData)}`, metaData, MessageType.SYSTEM_MESSAGE))
+    .then(() => sendMessage(channel.url, `metadata updated: ${JSON.stringify(metaData)}`, metaData, MessageType.SYSTEM))
   ))
 );
 

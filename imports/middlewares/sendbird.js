@@ -26,12 +26,14 @@ import {
 
 export default store => next => (action) => {
   const mapSendbirdMessage = msg => ({
+    id: `${msg.messageId}`,
     body: msg.message,
     self: msg.sender.userId === store.getState().app.user.id,
-    id: `${msg.messageId}`,
     date: moment(msg.createdAt).format('D.M.Y'),
     time: moment(msg.createdAt).format('HH:mm'),
     userPicture: msg.sender.profileUrl,
+    createdAt: msg.createdAt,
+    type: msg.customType,
   });
 
   const onMessageReceived = (channel, message) => {
@@ -125,7 +127,6 @@ export default store => next => (action) => {
         .then((messages) => {
           store.dispatch(appActionCreators.setMessages(
             messages
-            .sort((a, b) => a.createdAt > b.createdAt)
             .map(mapSendbirdMessage),
           ));
         })

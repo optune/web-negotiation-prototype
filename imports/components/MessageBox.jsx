@@ -11,7 +11,10 @@ import MessageType from '../constants/MessageType.js';
 
 const MessageBox = props => (
   <div className="message-box thrust-out">
-    {props.messages.map(message => (
+    {
+    props.messages
+    .sort((a, b) => ((a.createdAt > b.createdAt) ? 1 : -1))
+    .map(message => (
       <div key={message.id}>
         { message.type === MessageType.USER ?
           <div>
@@ -97,6 +100,7 @@ MessageBox.messagePropTypes = React.PropTypes.shape({
   self: React.PropTypes.bool,
   body: React.PropTypes.string,
   userPicture: React.PropTypes.string,
+  createdAt: React.PropTypes.number,
   date: React.PropTypes.string,
   time: React.PropTypes.string,
   type: React.PropTypes.oneOf(Object.values(MessageType)),
