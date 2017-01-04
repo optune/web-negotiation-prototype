@@ -7,7 +7,7 @@ storiesOf('element/MessageInput', module)
   .add('MessageInput', () =>
   (
     <div className="element-width">
-      <MessageInput label="MESSAGE" messagehint="Your message" />
+      <MessageInput label="MESSAGE" />
     </div>
   ),
 );

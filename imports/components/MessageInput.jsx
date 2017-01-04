@@ -6,7 +6,7 @@ const MessageInput = props => (
     <div className="label">{props.label}</div>
     <div className="messageBox flex-container">
       <div className="messageText flex-item">
-        <textarea className="form-field textarea small" name="message" placeholder={props.messagehint}>
+        <textarea className="form-field textarea small" name="message">
           {props.message}
         </textarea>
       </div>
@@ -28,7 +28,6 @@ const MessageInput = props => (
 MessageInput.propTypes = {
   label: React.PropTypes.string,
   message: React.PropTypes.string,
-  messagehint: React.PropTypes.string,
   onClick: React.PropTypes.func,
 };
 
