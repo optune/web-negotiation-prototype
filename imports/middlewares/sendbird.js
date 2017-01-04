@@ -35,9 +35,7 @@ export default store => next => (action) => {
   });
 
   const onMessageReceived = (channel, message) => {
-    const negotiationIds = store.getState().app.negotiations.map(n => n.id);
-
-    if (negotiationIds.includes(channel.url)) {
+    if (store.getState().app.currentNegotiation.id === channel.url) {
       store.dispatch(appActionCreators.receiveMessage(
         channel.url,
         mapSendbirdMessage(message),
