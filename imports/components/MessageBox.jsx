@@ -65,7 +65,7 @@ const MessageBox = props => (
                     <ul>
                       {message.changes.map(change => (
                         <li>
-                          - {change.object}
+                          - {change.message}
                         </li>
                         ),
                       )}
@@ -101,13 +101,13 @@ MessageBox.propTypes = {
       object: React.PropTypes.string,
       from: React.PropTypes.string,
       to: React.PropTypes.string,
+      message: React.PropTypes.string,
     })),
   })),
 };
 
 MessageBox.defaultProps = {
   messages: [],
-  changes: [],
 };
 
 export default MessageBox;

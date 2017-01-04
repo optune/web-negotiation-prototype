@@ -64,9 +64,11 @@ storiesOf('Negotiation', module)
           type: 'quick',
           userPicture: 'https://placeimg.com/100/100/people',
           changes: [{
-            object: 'Fee is to low',
+            object: 'Fee',
+            message: 'Fee is to low',
           }, {
-            object: 'Date not avialable',
+            object: 'Date',
+            message: 'Date not avialable',
           }],
         }, {
           self: false,
