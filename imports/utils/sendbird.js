@@ -68,7 +68,6 @@ export const getChannel = channelUrl => (
       else resolve(channel);
     });
   })
-  .then(getChannelMetaData)
 );
 
 export const sendMessage = (channelUrl, message, data, type = MessageType.TEXT_MESSAGE) => (
@@ -92,8 +91,8 @@ export const updateMetaData = (channelUrl, metaData) => (
         else resolve(response, channel);
       });
     })
+    .then(() => sendMessage(channel.url, `metadata updated: ${JSON.stringify(metaData)}`, metaData, MessageType.SYSTEM_MESSAGE))
   ))
-  .then(channel => sendMessage(channel.url, `metadata updated: ${JSON.stringify(metaData)}`, metaData, MessageType.SYSTEM_MESSAGE))
 );
 
 export const createChannel = (participants, metaData) => (
