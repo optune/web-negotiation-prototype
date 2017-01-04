@@ -30,7 +30,6 @@ export const connect = (id, name, profilePicUrl, onMessageReceived) => (
   )).then(() => {
     const channelHandler = new api.ChannelHandler();
     channelHandler.onMessageReceived = onMessageReceived;
-    channelHandler.onChannelChanged = console.log;
     api.addChannelHandler('HANDLER_ID', channelHandler);
     return user;
   }),
@@ -72,6 +71,18 @@ export const getChannel = channelUrl => (
   .then(getChannelMetaData)
 );
 
+export const sendMessage = (channelUrl, message, data, type = MessageType.TEXT_MESSAGE) => (
+  getChannel(channelUrl)
+  .then(channel => (
+    new Promise((resolve, reject) => {
+      channel.sendUserMessage(message, data, type, (result, error) => {
+        if (error) reject(error);
+        else resolve(result);
+      });
+    })
+  ))
+);
+
 export const updateMetaData = (channelUrl, metaData) => (
   getChannel(channelUrl)
   .then(channel => (
@@ -82,10 +93,7 @@ export const updateMetaData = (channelUrl, metaData) => (
       });
     })
   ))
-  .then(() => (
-    getChannel(channelUrl)
-  ))
-  // .then((channel) => sendMessage(channel.url, `metadata updated: ${metaData}`, metaData, MessageType.SYSTEM_MESSAGE))
+  .then(channel => sendMessage(channel.url, `metadata updated: ${JSON.stringify(metaData)}`, metaData, MessageType.SYSTEM_MESSAGE))
 );
 
 export const createChannel = (participants, metaData) => (
@@ -99,18 +107,6 @@ export const createChannel = (participants, metaData) => (
     );
   })
   .then(channel => updateMetaData(channel.url, metaData))
-);
-
-export const sendMessage = (channelUrl, message, data, type = MessageType.TEXT_MESSAGE) => (
-  getChannel(channelUrl)
-  .then(channel => (
-    new Promise((resolve, reject) => {
-      channel.sendUserMessage(message, data, type, (result, error) => {
-        if (error) reject(error);
-        else resolve(result);
-      });
-    })
-  ))
 );
 
 export const getMessages = channelUrl => (

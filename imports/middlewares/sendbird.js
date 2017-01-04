@@ -83,6 +83,7 @@ export default store => next => (action) => {
         [store.getState().app.user.id, action.negotiantId],
         { status: NegotiationStatus.PENDING },
       )
+      .then(metaDataMessage => store.dispatch(push(`/${metaDataMessage.channelUrl}`)))
       .catch((error) => { throw error; });
 
       break;
