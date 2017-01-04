@@ -10,8 +10,9 @@ const MessageInput = props => (
           <textarea
             {...props.input}
             className="form-field textarea small"
-            placeholder={props.hint}
-          />
+          >
+            {props.message}
+          </textarea>
         </div>
         <div className="sendIcon flex-item">
           <a onClick={props.onClick}>
@@ -31,7 +32,7 @@ const MessageInput = props => (
 MessageInput.propTypes = {
   name: React.PropTypes.string,
   label: React.PropTypes.string,
-  hint: React.PropTypes.string,
+  message: React.PropTypes.string,
   onClick: React.PropTypes.func,
   input: React.PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };

@@ -135,10 +135,7 @@ export default store => next => (action) => {
 
     case appActions.DECLINE_NEGOTIATION:
       updateMetaData(action.id, { status: NegotiationStatus.DECLINED })
-      .then((response) => {
-        console.log(response);
-        return getChannels();
-      })
+      .then(getChannels)
       .then((channels) => {
         store.dispatch(sendbirdActionCreators.setChannels(channels));
       })

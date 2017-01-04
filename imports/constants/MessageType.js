@@ -1,4 +1,5 @@
 export default {
-  TEXT_MESSAGE: 'text message',
-  SYSTEM_MESSAGE: 'system message',
+  USER: 'user',
+  SYSTEM: 'system',
+  QUICK: 'quick',
 };
