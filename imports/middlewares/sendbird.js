@@ -34,15 +34,24 @@ export default store => next => (action) => {
     userPicture: msg.sender.profileUrl,
   });
 
+  const onMessageReceived = (channel, message) => {
+    const negotiationIds = store.getState().app.negotiations.map(n => n.id);
+
+    if (negotiationIds.includes(channel.url)) {
+      store.dispatch(appActionCreators.receiveMessage(
+        channel.url,
+        mapSendbirdMessage(message),
+      ));
+    } else {
+      getChannels()
+      .then(channels => store.dispatch(sendbirdActionCreators.setChannels(channels)));
+    }
+  };
+
   switch (action.type) {
     case appActions.AUTHENTICATE:
       if (!store.getState().sendbird.connected) {
-        connect(action.user.id, action.user.name, action.user.profilePicUrl, (channel, message) => {
-          store.dispatch(appActionCreators.receiveMessage(
-            channel.url,
-            mapSendbirdMessage(message),
-          ));
-        })
+        connect(action.user.id, action.user.name, action.user.profilePicUrl, onMessageReceived)
         .then((user) => {
           store.dispatch(sendbirdActionCreators.connect(user));
 
@@ -61,6 +70,7 @@ export default store => next => (action) => {
         .catch((error) => { throw error; });
       }
       break;
+
     case sendbirdActions.SET_CHANNELS:
       store.dispatch(appActionCreators.setNegotiations(action.channels.map((channel) => {
         const user = store.getState().app.user;
@@ -76,8 +86,8 @@ export default store => next => (action) => {
           },
         };
       })));
-
       break;
+
     case appActions.CREATE_NEGOTIATION:
       createChannel(
         [store.getState().app.user.id, action.negotiantId],
@@ -87,9 +97,11 @@ export default store => next => (action) => {
       .catch((error) => { throw error; });
 
       break;
+
     case appActions.SELECT_NEGOTIATION:
       store.dispatch(push(`/${action.negotiationId}`));
       break;
+
     case appActions.SEND_MESSAGE: {
       const channelUrl = store.getState().app.currentNegotiation.id;
 
@@ -107,6 +119,7 @@ export default store => next => (action) => {
       });
       break;
     }
+
     case appActions.LOAD_NEGOTIATION:
     case appActions.SET_CURRENT_NEGOTIATION:
       if (store.getState().sendbird.connected) {
@@ -121,6 +134,7 @@ export default store => next => (action) => {
         .catch((error) => { throw error; });
       }
       break;
+
     case appActions.DECLINE_NEGOTIATION:
       updateMetaData(action.id, { status: NegotiationStatus.DECLINED })
       .then((response) => {
