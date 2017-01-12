@@ -8,13 +8,13 @@ const UserCard = props => (
     </div>
     <summary style={{ width: '100%', margin: 10, marginTop: 15 }}>
       <h3><strong>{props.name}</strong></h3>
-      <div className="subtitle">{props.id}</div>
+      <div className="subtitle">{props.caption}</div>
     </summary>
   </button>
 );
 
 UserCard.propTypes = {
-  id: React.PropTypes.string,
+  caption: React.PropTypes.string,
   name: React.PropTypes.string,
   profilePic: React.PropTypes.string,
   onClick: React.PropTypes.func,

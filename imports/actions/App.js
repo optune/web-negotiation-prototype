@@ -1,5 +1,8 @@
 // This is a duck: https://github.com/erikras/ducks-modular-redux
 
+import MessageType from '../constants/MessageType.js';
+
+
 const initialState = {
   user: {
     name: undefined,
@@ -135,9 +138,11 @@ export const reducer = (state = initialState, action) => {
           messages: [
             ...state.currentNegotiation.messages,
             {
-              text: action.message,
-              mine: true,
+              body: action.message,
+              self: true,
               id: 'optimistic',
+              type: MessageType.USER,
+              createdAt: Date.now(),
             },
           ],
         },

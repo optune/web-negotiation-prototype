@@ -3,6 +3,7 @@ import React from 'react';
 import { storiesOf } from '@kadira/storybook';
 
 import MessageBox from './MessageBox.jsx';
+import MessageType from '../constants/MessageType.js';
 
 
 storiesOf('organisms/MessageBox', module)
@@ -13,6 +14,7 @@ storiesOf('organisms/MessageBox', module)
       body: 'Hi there, Id like to book you to our awesome party. Are you interested?',
       date: '23.12.2016',
       time: '22:05',
+      type: MessageType.USER,
       userPicture: 'https://placeimg.com/100/100/people',
     }]}
   />
@@ -26,7 +28,7 @@ storiesOf('organisms/MessageBox', module)
           body: 'Hi there, Id like to book you to our awesome party. Are you interested?',
           date: '23.12.2016',
           time: '22:05',
-          type: 'user',
+          type: MessageType.USER,
           userPicture: 'https://placeimg.com/100/100/people',
           changes: [],
         }, {
@@ -34,7 +36,7 @@ storiesOf('organisms/MessageBox', module)
           body: 'Oh, hi',
           date: '23.12.2016',
           time: '22:06',
-          type: 'user',
+          type: MessageType.USER,
           userPicture: 'https://placeimg.com/100/100/people',
           changes: [],
         }, {
@@ -42,7 +44,7 @@ storiesOf('organisms/MessageBox', module)
           body: 'Yes, of course! But I need mo money!',
           date: '23.12.2016',
           time: '22:07',
-          type: 'user',
+          type: MessageType.USER,
           userPicture: 'https://placeimg.com/100/100/people',
           changes: [],
         }, {
@@ -50,7 +52,7 @@ storiesOf('organisms/MessageBox', module)
           body: 'Alright, we`ll give you as much as you want. Cool?',
           date: '23.12.2016',
           time: '22:30',
-          type: 'user',
+          type: MessageType.USER,
           userPicture: 'https://placeimg.com/100/100/people',
           changes: [],
         }, {
@@ -58,7 +60,7 @@ storiesOf('organisms/MessageBox', module)
           body: 'Good boy',
           date: '23.12.2016',
           time: '22:35',
-          type: 'user',
+          type: MessageType.USER,
           userPicture: 'https://placeimg.com/100/100/people',
           changes: [],
         },
@@ -67,12 +69,12 @@ storiesOf('organisms/MessageBox', module)
           body: 'Fee is to low',
           date: '23.12.2016',
           time: '22:35',
-          type: 'quick',
+          type: MessageType.QUICK,
           userPicture: 'https://placeimg.com/100/100/people',
           changes: [{
-            object: 'Fee is to low',
+            message: 'Fee is to low',
           }, {
-            object: 'Date not avialable',
+            message: 'Date not avialable',
           }],
         }, {
           self: false,
@@ -80,7 +82,7 @@ storiesOf('organisms/MessageBox', module)
           date: '23.12.2016',
           time: '22:35',
           userPicture: 'https://placeimg.com/100/100/people',
-          type: 'system',
+          type: MessageType.SYSTEM,
           changes: [{
             object: 'Fee',
             from: '800',
@@ -108,4 +110,3 @@ storiesOf('organisms/MessageBox', module)
   </div>
 ))
 ;
-

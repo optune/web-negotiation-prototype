@@ -1,49 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm, Form, Field } from 'redux-form';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 
 import { actionCreators } from '../actions/App.js';
+import Header from '../components/Header.jsx';
+import MessageBox from '../components/MessageBox.jsx';
+import MessageInput from '../components/MessageInput.jsx';
 
+/* <!-- <MessageInput name="message"   /> */
 
 const Negotiation = props => (
-  <form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
+  <Form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
     <div className="element-width">
-      <ul>
-        {props.messages.map(msg => (
-          <li
-            key={msg.id}
-            className={classNames('message', {
-              right: !msg.mine,
-              left: msg.mine,
-            })}
-          >{msg.text}</li>
-        ))}
-      </ul>
+      <Header tofrom="To" name="Marc Promoter" />
+      <Header tofrom="From" name="Fernando Artist (Agent Tiffany)" />
+      <MessageBox messages={props.messages} />
+
+      <Field name="message" component={MessageInput} placeholder="Your message" onClick={props.submit} />
+
       <p>
-        <Field name="message" component="textarea" type="text" placeholder="Your message" />
-      </p>
-      <p>
-        <button type="submit" className="push bottom micro" disabled={props.pristine || props.submitting}>Send</button>
         <Link className="button small" to="/">Back</Link>
         <button onClick={props.decline} className="button-secondary small hover-warning">Decline</button>
       </p>
     </div>
-  </form>
+  </Form>
 );
 
 Negotiation.propTypes = {
   handleSubmit: React.PropTypes.func,
+  submit: React.PropTypes.func,
   sendMessage: React.PropTypes.func,
   decline: React.PropTypes.func,
-  pristine: React.PropTypes.bool,
-  submitting: React.PropTypes.bool,
-  messages: React.PropTypes.arrayOf(React.PropTypes.shape({
-    text: React.PropTypes.string,
-    mine: React.PropTypes.bool,
-    id: React.PropTypes.string,
-  })),
+  messages: React.PropTypes.arrayOf(
+    MessageBox.messagePropTypes,
+  ),
 };
 
 Negotiation.defaultProps = {

@@ -2,11 +2,16 @@ import { Meteor } from 'meteor/meteor';
 
 import SendBird from 'sendbird';
 
+import MessageType from '../constants/MessageType.js';
+
+
+const metaKeys = ['status'];
 
 export const api = new SendBird({
   appId: Meteor.settings.public.SENDBIRD_APP_ID,
 });
 
+// expose api to browser for debugging
 window.sendbird = api;
 
 export const connect = (id, name, profilePicUrl, onMessageReceived) => (
@@ -30,6 +35,15 @@ export const connect = (id, name, profilePicUrl, onMessageReceived) => (
   }),
 );
 
+const getChannelMetaData = channel => new Promise((resolve, reject) => {
+  channel.getMetaData(metaKeys, (response, error) => {
+    const enhancedChannel = channel;
+    enhancedChannel.metaData = response;
+    if (error) reject(error);
+    else resolve(enhancedChannel);
+  });
+});
+
 export const getChannels = () => (
   new Promise((resolve, reject) => {
     const channelListQuery = api.GroupChannel.createMyGroupChannelListQuery();
@@ -42,6 +56,9 @@ export const getChannels = () => (
       });
     }
   })
+  .then(channels =>
+    Promise.all(channels.map(getChannelMetaData)),
+  )
 );
 
 export const getChannel = channelUrl => (
@@ -53,28 +70,43 @@ export const getChannel = channelUrl => (
   })
 );
 
-export const createChannel = participants => (
+export const sendMessage = (channelUrl, message, data, type = MessageType.USER) => (
+  getChannel(channelUrl)
+  .then(channel => (
+    new Promise((resolve, reject) => {
+      console.log(type);
+      channel.sendUserMessage(message, data, type, (result, error) => {
+        if (error) reject(error);
+        else resolve(result);
+      });
+    })
+  ))
+);
+
+export const updateMetaData = (channelUrl, metaData) => (
+  getChannel(channelUrl)
+  .then(channel => (
+    new Promise((resolve, reject) => {
+      channel.updateMetaData(metaData, true, (response, error) => {
+        if (error) reject(error);
+        else resolve(response, channel);
+      });
+    })
+    .then(() => sendMessage(channel.url, `metadata updated: ${JSON.stringify(metaData)}`, metaData, MessageType.SYSTEM))
+  ))
+);
+
+export const createChannel = (participants, metaData) => (
   new Promise((resolve, reject) => {
     api.GroupChannel.createChannelWithUserIds(
-      participants, true, null, null, { test: 123 },
+      participants, false, null, null, null,
       (channel, error) => {
         if (error) reject(error);
         else resolve(channel);
       },
     );
   })
-);
-
-export const sendMessage = (channelUrl, message) => (
-  getChannel(channelUrl)
-  .then(channel => (
-    new Promise((resolve, reject) => {
-      channel.sendUserMessage(message, { data: 'test' }, 'TEXT_MESSAGE', (result, error) => {
-        if (error) reject(error);
-        else resolve(result);
-      });
-    })
-  ))
+  .then(channel => updateMetaData(channel.url, metaData))
 );
 
 export const getMessages = channelUrl => (
@@ -85,18 +117,6 @@ export const getMessages = channelUrl => (
       .load(200, true, (messages, error) => {
         if (error) reject(error);
         else resolve(messages);
-      });
-    })
-  ))
-);
-
-export const leaveChannel = channelUrl => (
-  getChannel(channelUrl)
-  .then(channel => (
-    new Promise((resolve, reject) => {
-      channel.leave((response, error) => {
-        if (error) reject(error);
-        else resolve(response);
       });
     })
   ))

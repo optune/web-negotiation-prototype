@@ -1,5 +1,8 @@
 import { push } from 'react-router-redux';
 import { reset as resetForm, change as changeForm } from 'redux-form';
+import moment from 'moment';
+
+import NegotiationStatus from '../constants/NegotiationStatus.js';
 
 import {
   actions as appActions,
@@ -16,27 +19,39 @@ import {
   getChannel,
   getChannels,
   getMessages,
-  leaveChannel,
+  updateMetaData,
   sendMessage,
 } from '../utils/sendbird.js';
 
 
 export default store => next => (action) => {
   const mapSendbirdMessage = msg => ({
-    text: msg.message,
-    mine: msg.sender.userId === store.getState().app.user.id,
     id: `${msg.messageId}`,
+    body: msg.message,
+    self: msg.sender.userId === store.getState().app.user.id,
+    date: moment(msg.createdAt).format('D.M.Y'),
+    time: moment(msg.createdAt).format('HH:mm'),
+    userPicture: msg.sender.profileUrl,
+    createdAt: msg.createdAt,
+    type: msg.customType,
   });
+
+  const onMessageReceived = (channel, message) => {
+    if (store.getState().app.currentNegotiation.id === channel.url) {
+      store.dispatch(appActionCreators.receiveMessage(
+        channel.url,
+        mapSendbirdMessage(message),
+      ));
+    } else {
+      getChannels()
+      .then(channels => store.dispatch(sendbirdActionCreators.setChannels(channels)));
+    }
+  };
 
   switch (action.type) {
     case appActions.AUTHENTICATE:
       if (!store.getState().sendbird.connected) {
-        connect(action.user.id, action.user.name, action.user.profilePicUrl, (channel, message) => {
-          store.dispatch(appActionCreators.receiveMessage(
-            channel.url,
-            mapSendbirdMessage(message),
-          ));
-        })
+        connect(action.user.id, action.user.name, action.user.profilePicUrl, onMessageReceived)
         .then((user) => {
           store.dispatch(sendbirdActionCreators.connect(user));
 
@@ -55,13 +70,15 @@ export default store => next => (action) => {
         .catch((error) => { throw error; });
       }
       break;
+
     case sendbirdActions.SET_CHANNELS:
       store.dispatch(appActionCreators.setNegotiations(action.channels.map((channel) => {
         const user = store.getState().app.user;
-        const negotiant = channel.members.find(c => c.userId !== user.id);
+        const negotiant = channel.members.find(c => c.userId !== user.id) || {};
 
         return {
           id: channel.url,
+          status: channel.metaData.status,
           negotiant: {
             name: negotiant.nickname,
             id: negotiant.userId,
@@ -69,16 +86,22 @@ export default store => next => (action) => {
           },
         };
       })));
-
       break;
+
     case appActions.CREATE_NEGOTIATION:
-      createChannel([store.getState().app.user.id, action.negotiantId])
+      createChannel(
+        [store.getState().app.user.id, action.negotiantId],
+        { status: NegotiationStatus.PENDING },
+      )
+      .then(metaDataMessage => store.dispatch(push(`/${metaDataMessage.channelUrl}`)))
       .catch((error) => { throw error; });
 
       break;
+
     case appActions.SELECT_NEGOTIATION:
       store.dispatch(push(`/${action.negotiationId}`));
       break;
+
     case appActions.SEND_MESSAGE: {
       const channelUrl = store.getState().app.currentNegotiation.id;
 
@@ -96,6 +119,7 @@ export default store => next => (action) => {
       });
       break;
     }
+
     case appActions.LOAD_NEGOTIATION:
     case appActions.SET_CURRENT_NEGOTIATION:
       if (store.getState().sendbird.connected) {
@@ -103,19 +127,16 @@ export default store => next => (action) => {
         .then((messages) => {
           store.dispatch(appActionCreators.setMessages(
             messages
-            .sort((a, b) => a.createdAt > b.createdAt)
             .map(mapSendbirdMessage),
           ));
         })
         .catch((error) => { throw error; });
       }
       break;
+
     case appActions.DECLINE_NEGOTIATION:
-      leaveChannel(action.id)
-      .then((response) => {
-        console.log(response);
-        return getChannels();
-      })
+      updateMetaData(action.id, { status: NegotiationStatus.DECLINED })
+      .then(getChannels)
       .then((channels) => {
         store.dispatch(sendbirdActionCreators.setChannels(channels));
       })

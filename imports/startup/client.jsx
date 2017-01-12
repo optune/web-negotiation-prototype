@@ -60,6 +60,10 @@ Tracker.autorun(() => {
         'status.online': true,
       }).fetch().map(deconstructUser),
     ));
+
+    if (store.getState().routing.locationBeforeTransitions.pathname === '/login') {
+      browserHistory.push('/');
+    }
   }
 });
 
@@ -67,7 +71,6 @@ const requireAuth = (nextState, replace) => {
   if (!Meteor.user() && !Meteor.loggingIn()) {
     replace({
       pathname: '/login',
-      state: { nextPathname: nextState.location.pathname },
     });
   }
 };
@@ -81,7 +84,7 @@ Meteor.startup(() => {
         <Route path="/" /* component={Layout} */>
           <IndexRoute component={Dashboard} onEnter={requireAuth} />
           <Route path="login" component={Login} />
-          <Route path=":id" component={Negotiation} />
+          <Route path=":id" component={Negotiation} onEnter={requireAuth} />
         </Route>
       </Router>
     </Provider>,
