@@ -1,0 +1,206 @@
+.field {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  min-height: $elementSize;
+  max-width: $elementMaxWidth;
+  margin-bottom: 14px;
+  border-bottom: 2px solid $colorForeground;
+  transition: $transitionColor;
+
+  &.focus {
+    color: $colorAccent;
+    border-bottom: 2px solid $colorAccent;
+  }
+
+  &.error {
+    color: $colorError;
+    border-bottom: 2px solid $colorError;
+  }
+
+  &.readonly {
+    border-bottom: 2px solid transparent;
+  }
+
+  & .hint {
+    display: inline-block;
+    margin-left: 10px;
+    text-transform: none;
+    font-size: 7.5px;
+    color: $colorPlaceholder;
+  }
+}
+
+.field-datepicker {
+  position: absolute;
+  width: 100%;
+  top: 57px;
+}
+
+.menu {
+  position: fixed;
+  top: 80px;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  pointer-events: none;
+
+  & .list {
+    position:absolute;
+    width: $menuWidth;
+    right: 0;
+    background-color: $colorCard;
+    box-sizing: border-box;
+    box-shadow: $shadowNormal;
+    opacity: 0;
+    pointer-events: all;
+    transform: translate3d(100%, 0, 0);
+
+    @media #{$small} {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &.circle {
+    top: 25px;
+    pointer-events: all;
+
+    @media #{$small} {
+      top: 10px;
+    }
+  }
+}
+
+.messaging {
+  &.explanation {
+    position: relative;
+    width: $elementMinWidth;
+    opacity: 0; /* fade in with animations */
+
+    & .box {
+      display: block;
+      background-color: $colorCard;
+      border-radius: $sizeMicro;
+      box-shadow: $shadowButton;
+      padding: $sizeMicro $sizeSmall;
+      width: 100%;
+
+      & p {
+        min-height: 42px;
+      }
+    }
+
+    & .indicator {
+      position: absolute;
+      width: 84px;
+      pointer-events: none;
+
+      &.up {
+        &.straight {
+          top: -70px;
+          left: 35px;
+        }
+
+        &.right {
+          top: -20px;
+          right: -60px;
+        }
+
+        &.left {
+          top: -30px;
+          left: -55px;
+        }
+      }
+
+      &.down {
+        top: 40px;
+        right: 0px;
+
+        @media #{$small} {
+          top: 45px;
+        }
+      }
+    }
+
+    &.add-context {
+      position: fixed;
+      bottom: 110px;
+      right: 100px;
+
+      @media #{$small} {
+        width: 190px;
+        bottom: 82px;
+        right: 60px;
+      }
+    }
+
+    &.menu-context {
+      margin-left: auto;
+      top: -70px;
+      right: 80px;
+
+      @media #{$small} {
+        position: fixed;
+        top: 80px;
+        right: 85px;
+        width: 230px;
+      }
+    }
+
+    &.optune-context {
+      width: 200px;
+      top: 55px;
+      left: -10px;
+
+      @media #{$small} {
+        display: none;
+      }
+    }
+
+    &.signup-context {
+      width: 240px;
+      top: 30px;
+      left: 90px;
+
+      @media #{$mobile} {
+        width: 200px;
+      }
+    }
+  }
+}
+
+.months {
+  &.header {
+    position: fixed;
+    z-index: 20;
+    top: 0;
+  }
+
+  & .month {
+    position: fixed;
+    top: 0;
+    width: calc(100% - #{(2 * $sizeSmall)} + 4px);
+    max-width: calc(1200px - #{(2 * $sizeSmall)} + 4px);
+    background-color: $colorBackground;
+    pointer-events: none;
+    margin-left: -2px;
+    padding-left: 2px;
+    padding-right: 2px;
+
+    @media #{$medium} {
+      max-width: calc(800px - #{(2 * $sizeSmall)} + 4px);
+    }
+
+    @media #{$small} {
+      width: calc(100% - #{(2 * $sizeNano)} + 4px);
+      max-width: calc(#{$elementMaxWidth - (2 * $sizeNano)} + 4px);
+    }
+  }
+}
+.cover {
+  position: absolute;
+  width: 100%;
+  height: 75px;
+  background-color: $colorBackground;
+}

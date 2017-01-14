@@ -1,0 +1,243 @@
+.app {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.holder {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+nav {
+  position: relative;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 10px;
+  z-index: 30;
+}
+
+.nav-column-image {
+  line-height: 0;
+  width: 120px;
+
+  &.menu-icon {
+    padding-left: 60px;
+  }
+}
+
+main {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 80px);
+}
+
+.page {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100%;
+  max-width: 100%;
+
+
+  &.overview {
+    min-height: 820px;
+  }
+
+  &.overlay {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+
+    &.darkened::before {
+      content: " ";
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: $colorBackdrop;
+    }
+
+    @media #{$small} {
+      background-color: $colorCard;
+      width: 100%;
+      height: 100%;
+
+      & .reduce {
+        display: none;
+      }
+
+      & .card {
+        &.shadow {
+          box-shadow: none;
+        }
+
+        & .row.padding {
+          padding-left: 0px;
+          padding-right: 0px;
+        }
+
+        & .icon {
+          margin-top: -50px;
+        }
+      }
+    }
+  }
+}
+
+
+
+.container {
+  position: relative;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media #{$medium} {
+    max-width: 800px;
+  }
+
+  @media #{$small} {
+    max-width: $elementMaxWidth;
+  }
+}
+
+.row {
+  &::after {
+    content: " ";
+    display: table;
+    clear: both;
+  }
+
+  &.front {
+    position: absolute;
+    width: 100%;
+  }
+}
+
+.column {
+  display: block;
+  float: left;
+  padding: 0 20px;
+
+  @media #{$small} {
+    padding: 0 10px;
+  }
+
+  /* less padding for nested columns */
+  & .column {
+    padding: 0 10px;
+  }
+
+  &.fullwidth {
+    width: 100%;
+  }
+
+  &.half {
+    width: 50%;
+  }
+
+  &.third {
+    width: 33.333%;
+    min-width: $elementMinWidth;
+
+    @media #{$medium} {
+      width: 50%;
+
+      &.move-left {
+        clear:both;
+      }
+    }
+
+    @media #{$small} {
+      width: 100%;
+    }
+  }
+
+  &.twelfth {
+    width: 8.333%;
+  }
+}
+
+.column-right {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.column-middle {
+  display: flex;
+  align-items: center;
+}
+
+.center {
+  text-align: center;
+}
+
+.quad {
+  position: relative;
+}
+
+.quad::after {
+  display: block;
+  content: " ";
+  margin-bottom: 100%;
+}
+
+/* http://www.stubbornella.org/content/2010/06/25/the-media-object-saves-hundreds-of-lines-of-code */
+.media {
+  display: flex;
+
+  &.upfilling {
+    height: 100%;
+  }
+
+  & .figure, & figure {
+    flex-shrink: 0;
+    margin-right: 10px;
+
+    &.normal {
+      margin-right: 20px;
+    }
+  }
+
+  & .body {
+    flex-grow: 1;
+
+    &.flex {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+
+      &.middle {
+        justify-content: space-around;
+      }
+    }
+
+    &.fixate {
+      &.medium {
+        width: calc(100% - 60px);
+      }
+    }
+
+    &.padding-right {
+      padding-right: 10px;
+    }
+  }
+}
+
+.element-width {
+  width: 100%;
+  max-width: $elementMaxWidth;
+  min-width: $elementMinWidth;
+}
+
+.float-right {
+  float: right;
+}

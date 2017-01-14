@@ -1,0 +1,183 @@
+/* color names via http://chir.ag/projects/name-that-color/ */
+
+/* do not use named colors, they are just for reference */
+
+  $colorPampas: #EEE9E3;
+  $colorHaiti: #0a0f2c;
+  $colorHarlequin: #27E200;
+  $colorWhite: #FFFFFF;
+  $colorStormGray: #6F717D;
+  $colorTimberwolf: #F2F2F2;
+  $colorMonza: #D0021B;
+  $colorWaterloo: #7C819C;
+  $colorHavelockBlue: #4A90E2;
+  $colorLightGrey: #D6D3CF;
+  $colorDustyGray: #9B9B9B;
+
+  $colorBackground: $colorPampas;
+  $colorButton: rgba(10, 15, 44, 0.1);
+  $colorForeground: $colorHaiti;
+  $colorForegroundLight: $colorWaterloo;
+  $colorForegroundFaint: $colorDustyGray;
+  $colorAccent: $colorHarlequin;
+  $colorMark: $colorWhite;
+  $colorCard: $colorWhite;
+  $colorCardHover: $colorTimberwolf;
+  $colorCardMark: $colorLightGrey;
+  $colorLight: $colorTimberwolf;
+  $colorPlaceholder: $colorStormGray;
+  $colorError: $colorMonza;
+  $colorBackdrop: rgba(10, 15, 44, 0.3);
+  $colorBackdropDark: rgba(0, 0, 0, 0.85);
+
+  $fontFamilyRegular: 'Brandon Text Regular', Helvetica, sans-serif;
+  $fontFamilyBold: 'Brandon Text Bold', Helvetica, sans-serif;
+
+  $fontSizeXL: 24px;
+  $fontSizeLarge: 20px; /* 24px in Sketch */
+  $fontSizeBig: 18px; /* 22px in Sketch */
+  $fontSizeMedium: 15px; /* 18px in Sketch */
+  $fontSizeSmall: 14px; /* 16px in Sketch */
+  $fontSizeTiny: 11px; /* 13px in Sketch */
+  $fontSizeNano: 9px; /* 11px in Sketch */
+
+  $gridSize: 10px;
+
+  $sizeNano: 5px;
+  $sizeMicro: 10px;
+  $sizeMini: 15px;
+  $sizeSmall: 20px;
+  $sizeMedium: 30px;
+  $sizeLarge: 40px;
+  $sizeXLarge: 100px;
+  $sizeXXLarge: 140px;
+
+  $elementMaxWidth: 360px;
+  $elementMinWidth: 280px;
+  $elementSize: 51px;
+  $elementBigSize: 60px;
+
+  $menuWidth: 400px;
+
+  $shadowNormal: 0 0 6px 0 rgba(0, 0, 0, 0.37);
+  $shadowSoft: 0 0 2px 0 rgba(0, 0, 0, 0.15);
+  $shadowButton: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+  $animationDuration: 0.5s;
+  $transitionDuration: 0.3s;
+
+  $transitionDefault: all $transitionDuration;
+  $transitionColor: color $transitionDuration, background-color $transitionDuration, border-color $transitionDuration;
+  $transitionShadow: box-shadow $transitionDuration;
+
+
+  @mixin fontLargeBold() {
+    font-family: $fontFamilyBold;
+    font-size: $fontSizeLarge;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+  }
+
+  @mixin fontBigBold() {
+    font-family: $fontFamilyBold;
+    font-size: $fontSizeBig;
+    font-weight: bold;
+    letter-spacing: 0.45px;
+    line-height: 1.3;
+  }
+
+  @mixin fontMediumBold() {
+    font-family: $fontFamilyBold;
+    font-size: $fontSizeMedium;
+    font-weight: bold;
+    letter-spacing: 0.25px;
+  }
+
+  @mixin fontSmallBold() {
+    font-family: $fontFamilyBold;
+    font-size: $fontSizeSmall;
+    font-weight: bold;
+    letter-spacing: -0.15px;
+    line-height: 1.5;
+  }
+
+  @mixin fontTinyBold() {
+    font-family: $fontFamilyBold;
+    font-size: $fontSizeTiny;
+    font-weight: bold;
+    letter-spacing: 0.1px;
+    line-height: 1.5;
+  }
+
+  @mixin fontCapsBold() {
+    font-family: $fontFamilyBold;
+    font-size: $fontSizeSmall;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: -0.3px;
+  }
+
+  @mixin fontCapsRegular() {
+    font-family: $fontFamilyRegular;
+    font-size: $fontSizeSmall;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: -0.3px;
+  }
+
+  @mixin fontCapsSmall() {
+    font-family: $fontFamilyRegular;
+    font-size: $fontSizeTiny;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  @mixin fontBigRegular() {
+    font-family: $fontFamilyRegular;
+    font-size: $fontSizeBig;
+    font-weight: normal;
+    letter-spacing: 0.45px;
+    line-height: 1.3;
+  }
+
+  @mixin fontMediumRegular() {
+    font-family: $fontFamilyRegular;
+    font-size: $fontSizeMedium;
+    font-weight: normal;
+    letter-spacing: 0.25px;
+  }
+
+  @mixin fontSmallRegular() {
+    font-family: $fontFamilyRegular;
+    font-size: $fontSizeSmall;
+    font-weight: normal;
+    letter-spacing: -0.15px;
+  }
+
+  @mixin fontTinyRegular() {
+    font-family: $fontFamilyRegular;
+    font-size: $fontSizeTiny;
+    font-weight: normal;
+    letter-spacing: 0.1px;
+    line-height: 1.5;
+  }
+
+  @mixin fontNanoRegular() {
+    font-family: $fontFamilyRegular;
+    font-size: $fontSizeNano;
+    font-weight: normal;
+    letter-spacing: 0.1px;
+    line-height: 1.7;
+  }
+
+
+/* keep in sync with components/utils/MediaQueryProps */
+$mobile: (max-width: 400px);
+$small: (max-width: 640px);
+$notSmall: (min-width: 641px);
+$medium: (max-width: 960px);
+$desktop: (min-width: 961px);
+$oversized: (min-width: 1201px);
+
+

@@ -1,0 +1,625 @@
+.logo {
+  width: 80px;
+  max-height: 60px;
+
+  @media #{$mobile} {
+    width: 60px;
+  }
+
+  /* required for IE */
+  & img {
+    max-height: 60px;
+  }
+}
+
+.notification {
+  &.info {
+    height: 13px;
+
+    @media #{$small} {
+      &.desktop {
+        display: none;
+      }
+    }
+  }
+}
+
+button, .button {
+  border: none;
+  background-color: $colorButton;
+  width: 100%;
+  max-width: $elementMaxWidth;
+  font-size: $fontSizeBig;
+  font-weight: bold;
+  height: $elementBigSize;
+  transition: $transitionColor;
+  cursor: pointer;
+  /*-webkit-font-smoothing: antialiased;*/
+  padding: 0 20px;
+  outline: 0;
+
+  &.small {
+    padding: 7px 16px;
+    width: auto;
+    height: auto;
+    font-size: $fontSizeTiny;
+  }
+
+  &.medium {
+    padding: 6px 15px;
+    height: 42px;
+    @include fontBigRegular();
+
+    &.small-text {
+      @include fontSmallRegular();
+    }
+  }
+
+  &.small {
+    padding: 4px 15px;
+    width: auto;
+    height: auto;
+    @include fontMediumRegular();
+  }
+
+  &.invalid, &.invalid:hover {
+    background-color: $colorError;
+    color: $colorBackground;
+  }
+
+  &.hover-warning:hover {
+    background-color: $colorError;
+    color: $colorBackground;
+  }
+
+  &.outlined {
+    position: relative;
+    background-color: transparent;
+    border: 2px solid $colorForeground;
+    padding: 7px 10px;
+
+    &:hover {
+      background-color: $colorCardHover;
+    }
+
+    & .icon {
+      display: inline-block;
+      position: absolute;
+      right: 16px;
+      top: 18px;
+    }
+  }
+
+  &.disabled {
+    background-color: $colorButton;
+    color: $colorPlaceholder;
+    box-shadow: none;
+    cursor: default;
+
+    &:hover {
+      background-color: $colorButton;
+      color: $colorPlaceholder;
+    }
+  }
+}
+
+a.button {
+  display: inline-block;
+  text-decoration: none;
+}
+
+
+
+/* we use label as the super container for form elements:
+<label class="field">
+  <div class="label">Label</div>
+  <input>
+</label>
+*/
+
+.label {
+  font-family: $fontFamilyRegular;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: $fontSizeTiny;
+  white-space: nowrap;
+  margin-bottom: 2px;
+  margin-top: 10px;
+  letter-spacing: 0.55px;
+
+  & .icon {
+    padding-top: 10px;
+  }
+}
+
+
+.form-field {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  font-size: $fontSizeBig;
+  font-family: $fontFamilyBold;
+  letter-spacing: 0.4px;
+  font-weight: bold;
+  line-height: 1.7;
+  border-radius: 0 !important;
+  height: 34px;
+  transition: $transitionColor;
+  appearance: none;
+
+  &.open {
+    height: 100px !important;
+    max-height: none;
+  }
+
+  &.small {
+    font-size: $fontSizeTiny;
+  }
+
+  &.textarea-field {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
+  &.textarea {
+    max-height: 100px;
+    margin-bottom: 0;
+
+    &.textarea-focus {
+      max-height: none;
+    }
+  }
+
+  &.info {
+    font-weight: normal;
+    color: $colorForeground;
+  }
+
+  &.right {
+    text-align: right;
+  }
+
+  &.label {
+    font-family: $fontFamilyRegular;
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: $fontSizeTiny;
+    white-space: nowrap;
+    margin-bottom: 2px;
+    height: 0;
+  }
+
+  &.dropdown {
+    width: auto;
+    margin-left: auto;
+  }
+
+  /* focus is handled via react */
+  &:focus {
+    outline: 0;
+  }
+
+  @nest .empty & {
+    color: $colorPlaceholder;
+  }
+}
+
+.inline-label {
+  font-size: $fontSizeBig;
+  font-family: $fontFamilyRegular;
+  letter-spacing: 0.4px;
+  line-height: 1.9;
+  margin-right: 5px;
+
+  @nest .empty & {
+    color: $colorPlaceholder;
+  }
+}
+
+p.form-field {
+  padding: 1px;
+  margin-bottom: 1.20px;
+}
+
+.more {
+  content: ' ';
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 60%;
+  bottom: -10px;
+  background: -webkit-linear-gradient(transparent, $colorBackground 70%, $colorBackground 100%) bottom repeat;
+  background: linear-gradient(transparent, $colorBackground 70%, $colorBackground 100%) bottom repeat;
+  transition: $transitionDefault;
+
+  &.more-focus {
+    display: none;
+  }
+
+  &.more-empty {
+    display: none;
+  }
+}
+
+.more-label {
+  position: absolute;
+  bottom: 0.20px;
+  right: 0;
+  text-transform: uppercase;
+  font-size: $fontSizeTiny;
+  font-weight: normal;
+  white-space: nowrap;
+  transition: $transitionDefault;
+}
+
+.field-group {
+  position: relative;
+  display: flex;
+  max-width: $elementMaxWidth;
+
+  & .field {
+    /* reset field position to give helpers (datepicker, etc) the possiblity to use full width */
+    position: initial;
+  }
+
+  & label {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  & label:first-child {
+    margin-left: 0;
+  }
+
+  & label:last-child {
+    margin-right: 0;
+  }
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  background-color: $colorCard;
+  transition: $transitionShadow;
+  box-shadow: $shadowSoft;
+
+  &.interactive {
+    cursor: pointer;
+
+    &:hover, &.hover {
+      position: relative;
+      z-index: 10;
+      box-shadow: $shadowNormal;
+
+      & .icon.action path {
+        fill: $colorAccent;
+      }
+    }
+  }
+
+  &.inner {
+    box-shadow: none;
+  }
+
+  &.padded {
+    padding: 10px;
+  }
+
+  &.overlay {
+    position: absolute;
+    background-color: $colorBackdropDark;
+    z-index: 999;
+
+    &:hover {
+      position: absolute;
+    }
+  }
+
+  &.form-card {
+    cursor: unset;
+
+    &.overlayable {
+      position: absolute;
+    }
+  }
+
+  & .summary {
+    width: 100%;
+    margin: 15px 10px 10px;
+
+    &.embed {
+      margin: 0;
+    }
+
+    &.adjust {
+      &.left {
+        margin-left: 12px;
+      }
+    }
+  }
+
+  & .footer {
+    padding-bottom: 1.40px;
+
+    & .margin {
+      &.right {
+        margin-right: 16px
+      }
+      &.top {
+        margin-top: 3px;
+      }
+    }
+
+    & .web {
+      margin-right: 18px;
+    }
+
+    & h3 {
+      letter-spacing: 0.75px
+    }
+
+    & p {
+      margin-bottom: 0;
+    }
+  }
+
+  &.tall {
+    max-height: 120px;
+  }
+
+  &.short {
+    height: 60px;
+  }
+
+  &.dense {
+    height: 35px;
+  }
+
+  & .subtitle {
+    margin-top: 6px;
+    font-size: $fontSizeTiny;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+
+    &.adjust {
+      &.top {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  & .icon path {
+    transition: $transitionDefault;
+  }
+
+  &.flex {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  & .column:first-child {
+    padding-left: 0;
+  }
+
+  & .column:last-child {
+    padding-right: 0;
+  }
+
+  & .progress {
+    position: absolute;
+    height: 100%;
+    right: 0;
+    background-color: $colorLight;
+    transition: width 0.1s;
+  }
+
+  & .signup {
+    position: relative;
+    top: 100px;
+    width: 80%;
+    margin: 0 auto;
+    background-color: $colorBackground;
+    color: $colorForeground;
+    padding: 20px;
+    text-align: center;
+  }
+}
+
+.card-quad {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  &.narrow {
+    width: 30px;
+  }
+}
+
+.card-small {
+  width: 35px;
+  height: 35px;
+}
+
+.icon {
+  &.circle {
+    border: 2px solid $colorForeground;
+  }
+
+  &.clock {
+    & svg {
+      height: 100%;
+      width: 100%;
+    }
+    & line {
+      stroke: $colorForeground;
+      stroke-width: 2px;
+    }
+  }
+
+  &.on-hover {
+    &.warning {
+      &:hover {
+        & path{
+          fill: $colorError;
+        }
+      }
+    }
+    &:hover {
+      & path{
+        fill: $colorAccent;
+      }
+    }
+  }
+}
+
+.web {
+  & .icon {
+    color: $colorForeground;
+    width: 17px;
+    height: 17px;
+
+    &.corr-0-6 {
+      padding-top: 3px;
+    }
+
+    &.corr-0-9 {
+      padding-top: 4px;
+    }
+
+    &.corr-4-3 {
+      padding-left: 2px;
+      padding-top: 1px;
+    }
+  }
+
+  & p {
+    font-size: 1.20px;
+    line-height: 15px;
+    margin-left: 0.40px;
+  }
+}
+
+.icon-normal {
+  width: 21px;
+  height: 21px;
+
+  & figcaption {
+    font-size: 8px;
+  }
+}
+
+.icon-small {
+  width: 19px;
+  height: 19px;
+
+  & figcaption {
+    font-size: 6px;
+  }
+}
+.icon-mini {
+  width: 17px;
+  height: 17px;
+}
+
+.suggestions-container {
+  position: absolute;
+  background-color: $colorBackground;
+  color: $colorForeground;
+  z-index: 10;
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+  width: 100%;
+  box-shadow: $shadowNormal;
+
+  & li {
+    margin-bottom: 0px;
+  }
+}
+.suggestion {
+  border-bottom: 1px solid $colorCardMark;
+}
+.suggestion-focused {
+  box-shadow: $shadowNormal !important;
+
+  & .icon {
+    & path {
+      fill: $colorAccent !important;
+    }
+  }
+}
+
+.message-box {
+  height: 400px;
+  background-color: $colorBackground;
+  overflow: scroll;
+
+  & .right {
+    float: right;
+  }
+
+  & .left {
+    float: left;
+  }
+}
+
+.message {
+  position: relative;
+  background-color: $colorCard;
+  padding: 10px 10px;
+  border-radius: 10px;
+  width: 82%;
+
+  @include fontTinyRegular();
+
+  &.left {
+    left: -3px;
+  }
+
+  &.right {
+    background-color: $colorCardMark;
+    right: -3px;
+  }
+
+  & .edge {
+    position: absolute;
+    top: 12px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+
+    &.left {
+      right: -10px;
+      border-top: 12px solid $colorCard;
+    }
+
+    &.right {
+      left: -10px;
+      border-top: 12px solid $colorCardMark;
+    }
+  }
+}
+
+.message-meta {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+  margin-top: 5px;
+
+  &.right {
+    text-align: right;
+  }
+
+  & .light {
+    color: $colorPlaceholder;
+  }
+}
+
+.conversation-overlay {
+  height: 718px;
+}
