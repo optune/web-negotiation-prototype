@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.5",
   "scripts": {
+    "mgp": "mgp",
     "start": "meteor run --settings settings.json",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "deploy": "npm version patch && DEPLOY_HOSTNAME=eu-west-1.galaxy.meteor.com meteor deploy negotiation.optune.me --settings settings.json",
