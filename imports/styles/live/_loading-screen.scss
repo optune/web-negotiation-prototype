@@ -1,0 +1,59 @@
+svg#main circle {
+  fill: none;
+  stroke: #27E200;
+  stroke-linecap: round;
+  stroke-width: 7;
+  animation: circley 5.333s ease infinite, rotaty 2.2s linear infinite;
+  transform-origin: center center;
+}
+
+.loading-screen {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  background-color: black;
+  background-image: url(https://res.cloudinary.com/optune-me/image/upload/fl_progressive/v1465482336/custom/optune.me/club_zorro_rojo_future_beats.jpg);
+  background-size: cover;
+}
+
+.loading-screen::before {
+  position: absolute;
+  content: ' ';
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.loading-screen-inner {
+  position: relative;
+  color: white;
+  text-align: center;
+  /*font-size: 1.4rem;*/
+}
+
+.loading-screen-inner a {
+  color: #8FB5ED;
+  text-decoration: none;
+}
+
+.loading-screen-inner a:hover {
+  text-decoration: underline;
+}
+
+.login-dialog {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  width: 100%;
+  background-color: $colorBackground;
+  color: $colorForeground;
+  padding: 20px;
+}

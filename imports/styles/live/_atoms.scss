@@ -1,0 +1,171 @@
+/* =================== */
+/* Buttons             */
+/* =================== */
+
+button {
+  &.button-floating {
+    background-color: $colorForeground;
+    display: inline-block;
+    position: fixed;
+    height: 56px;
+    width: 56px;
+    z-index: 20;
+    border: none;
+    border-radius: 50%;
+    box-shadow: $shadowButton;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    transition: background-color 0.3s ease;
+
+    & .icon {
+      margin: 17px;
+      & path {
+        fill: $colorAccent;
+        transition: fill 0.3s ease;
+      }
+    }
+
+    &:hover {
+      background-color: $colorAccent;
+      & .icon path {
+        fill: $colorForeground;
+      }
+    };
+
+    &.right {
+      right: $sizeLarge;
+
+      @media #{$small} {
+        right: $sizeMicro;
+      }
+    }
+
+    &.bottom {
+      bottom: $sizeLarge;
+
+      @media #{$small} {
+        bottom: $sizeMicro;
+      }
+    }
+  }
+}
+
+.button-primary {
+  background-color: $colorForeground;
+  color: $colorAccent;
+  box-shadow: $shadowButton;
+
+  @media #{$small} {
+    position: fixed;
+    max-width: 100%;
+    width: calc(100% - #{($sizeMini * 2)}) ;
+    margin: $sizeMini;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    &.inline {
+      position: relative;
+    }
+  }
+
+  &:hover {
+    background-color: $colorAccent;
+    color: $colorForeground;
+  }
+
+  &:focus {
+    border: 1px solid $colorMark;
+    outline: 0;
+  }
+}
+
+.button-secondary {
+  &:hover {
+    background-color: $colorPlaceholder;
+    color: $colorMark;
+  }
+}
+
+/* =================== */
+/* Icons               */
+/* =================== */
+.icon {
+  &.normal {
+    width: 22px;
+    height: 22px;
+  }
+  &.sketch-arrow {
+    & path {
+      fill: $colorAccent;
+    }
+  }
+}
+
+
+/* =================== */
+/* Navigation          */
+/* =================== */
+
+.menu {
+  & .item {
+    float: left;
+    width: 100%;
+    margin: 0;
+    padding: 30px 15px;
+    text-align: center;
+    border-bottom: solid 2px $colorCardMark;
+    cursor: pointer;
+    box-sizing: border-box;
+    background-color: $colorCard;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: $shadowNormal;
+      z-index: 1000;
+    }
+  }
+}
+
+nav {
+  & .menu {
+    cursor: pointer;
+    width: $sizeLarge;
+    height: $sizeLarge;
+    background-color: $colorPlaceholder;
+  }
+}
+
+/* =================== */
+/* Vendor Components   */
+/* =================== */
+
+.calendar {
+  font-family: $fontFamilyBold !important;
+  font-size: $fontSizeBig !important;
+  font-weight: 800 !important;
+
+  & .Cal__Day__root.Cal__Day__enabled:hover:before {
+    background-color: $colorBackdrop !important;
+    width: 46px  !important;
+    height: 46px !important;
+    margin-top: -23px !important;
+    margin-left: -23px !important;
+  }
+  & .Cal__Day__root.Cal__Day__today:before {
+    width: 46px  !important;
+    height: 46px !important;
+    margin-top: -23px !important;
+    margin-left: -23px !important;
+  }
+}
+
+.auth0-lock-submit span {
+  color: $colorForeground !important;
+
+  & span svg polygon {
+    fill: $colorForeground !important;
+  }
+}
+
