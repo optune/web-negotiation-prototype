@@ -1,11 +1,9 @@
-// NPM imports
-import classNames from 'classnames';
-
 // React imports
 import React from 'react';
 
-// Local imports
-import Avatar from './Avatar.jsx';
+import SystemMessage from './SystemMessage.jsx';
+import UserMessage from './UserMessage.jsx';
+import QuickMessage from './QuickMessage.jsx';
 import MessageType from '../constants/MessageType.js';
 
 
@@ -17,79 +15,16 @@ const MessageBox = props => (
     .map(message => (
       <div key={message.id}>
         { message.type === MessageType.USER ?
-          <div>
-            <div
-              className={classNames('message', {
-                right: message.self,
-                left: !message.self,
-              })}
-            >
-              <div
-                className={classNames('edge', {
-                  right: !message.self,
-                  left: message.self,
-                })}
-              />
-              {message.body}
-            </div>
-            { (!message.self && message.userPicture) ?
-              <Avatar
-                className="left"
-                img={message.userPicture}
-                size="small"
-              /> : undefined
-            }
-            <br className="clear" />
-          </div>
+          <UserMessage {...message} />
         :
           <div>
             { message.type === MessageType.SYSTEM ?
-              <div className="bluebox">
-                <div>
-                  {!message.self ?
-                    <strong>The Other </strong> : <strong>Me </strong>
-                  }
-                  updated the offer:
-                </div>
-                <div>
-                  <ul>
-                    {(message.changes || []).map(change => (
-                      <li>
-                        -
-                        <strong>{change.object}</strong>
-                        changed from {change.from} to
-                        <strong>{change.to}</strong>
-                      </li>
-                      ),
-                    )}
-                  </ul>
-                </div>
-              </div>
+              <SystemMessage user={message.self ? 'You' : 'Negotiant'} {...message} />
             : // message.type === MessageType.QUICK
-              <div className="bluebox">
-                <div>
-                  { !message.self ?
-                    <strong>The Other</strong> : <strong>Me</strong> } sent a quickanswer:
-                  <div>
-                    <ul>
-                      {(message.changes || []).map(change => (
-                        <li>
-                          - {change.message}
-                        </li>
-                        ),
-                      )}
-                    </ul>
-                  </div>
-                </div>
-              </div>
+              <QuickMessage user={message.self ? 'You' : 'Negotiant'} {...message} />
              }
           </div>
         }
-        <small
-          className={classNames('message-meta')}
-        >
-          <span className="light">{message.date},</span> {message.time}
-        </small>
       </div>),
     )}
   </div>

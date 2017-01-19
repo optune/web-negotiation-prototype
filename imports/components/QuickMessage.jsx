@@ -4,17 +4,16 @@ import classNames from 'classnames';
 // React imports
 import React from 'react';
 
-const SystemMessage = props => (
+
+const QuickMessage = props => (
   <div>
     <div className="bluebox">
-      <div>{props.user} updated the offer:</div>
+      <div>{props.user} sent a quickanswer:</div>
       <div>
         <ul>
-          {props.changes.map(change => (
-            <li key={change.object}>
-              <strong>{change.object} </strong>
-              changed from {change.from} to
-              <strong> {change.to}</strong>
+          {(props.changes || []).map(change => (
+            <li>
+              - {change.message}
             </li>
             ),
           )}
@@ -29,7 +28,7 @@ const SystemMessage = props => (
   </div>
 );
 
-SystemMessage.propTypes = {
+QuickMessage.propTypes = {
   changes: React.PropTypes.arrayOf(React.PropTypes.shape({
     object: React.PropTypes.string,
     from: React.PropTypes.string,
@@ -40,8 +39,8 @@ SystemMessage.propTypes = {
   user: React.PropTypes.string,
 };
 
-SystemMessage.defaultProps = {
-  changes: [],
+QuickMessage.defaultProps = {
+
 };
 
-export default SystemMessage;
+export default QuickMessage;
