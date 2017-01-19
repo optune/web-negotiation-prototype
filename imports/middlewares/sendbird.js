@@ -30,9 +30,11 @@ export default store => next => (action) => {
     // HACK: depythonize data. Seems like the msg.data is a Python object storing
     let data = {};
     try {
-      data = JSON.parse(msg.data.split("u'").join("'").split("'").join('"'));
+      if (msg.data !== '') {
+        data = JSON.parse(msg.data.split("u'").join("'").split("'").join('"'));
+      }
     } catch (e) {
-      console.error(e);
+      console.error({ msg }, e);
     }
 
     return {
@@ -45,9 +47,10 @@ export default store => next => (action) => {
       userPicture: msg.sender.profileUrl,
       createdAt: msg.createdAt,
       type: msg.customType,
-      changes: [MessageType.QUICK, MessageType.SYSTEM].includes(msg.customType) && data.changes
-      ? data.changes
-      : [],
+      changes:
+        [MessageType.QUICK, MessageType.SYSTEM].includes(msg.customType) && data.changes
+        ? data.changes
+        : [],
     };
   };
 

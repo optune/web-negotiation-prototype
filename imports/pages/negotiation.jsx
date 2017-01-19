@@ -4,6 +4,7 @@ import { reduxForm, Form, Field } from 'redux-form';
 import { connect } from 'react-redux';
 
 import { actionCreators } from '../actions/App.js';
+import FeeInput from '../components/FeeInput.jsx';
 import Header from '../components/Header.jsx';
 import MessageBox from '../components/MessageBox.jsx';
 import MessageInput from '../components/MessageInput.jsx';
@@ -17,7 +18,10 @@ const Negotiation = props => (
       <Header tofrom="From" name={props.selfName} />
       <MessageBox messages={props.messages} />
 
-      <Field name="message" component={MessageInput} placeholder="Your message" onClick={props.submit} />
+      <div className="whitebox">
+        <Field name="fee" component={FeeInput} label="Fee" />
+      </div>
+      <Field name="message" component={MessageInput} label="Message" placeholder="Your message" onClick={props.submit} />
 
       <p>
         <Link className="button small" to="/">Back</Link>

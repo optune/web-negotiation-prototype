@@ -7,7 +7,7 @@ storiesOf('element/FeeInput', module)
   .add('MessageInput', () =>
   (
     <div className="element-width">
-    <div className="whitebox">
+
       <FeeInput label="FEE" value="800" />
     </div>
     </div>

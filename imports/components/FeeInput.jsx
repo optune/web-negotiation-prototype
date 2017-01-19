@@ -1,19 +1,19 @@
 import React from 'react';
 
 const FeeInput = props => (
-  <label className="field fee-input">
+  <label className="field fee-input" htmlFor="fee-input">
     <div className="label">{props.label}</div>
     <div className="flex-container">
       <div className="flex-item fee-input">
-        <input type="text" autoComplete="off" className="form-field" value={props.value} name="fee" />
+        <input {...props.input} type="number" step="1" min="0" className="form-field" />
       </div>
     </div>
-    </label>
+  </label>
 );
 
 FeeInput.propTypes = {
   label: React.PropTypes.string,
-  value: React.PropTypes.string,
+  input: React.PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 export default FeeInput;
