@@ -3,6 +3,7 @@ import { reset as resetForm, change as changeForm } from 'redux-form';
 import moment from 'moment';
 
 import NegotiationStatus from '../constants/NegotiationStatus.js';
+import MessageType from '../constants/MessageType.js';
 
 import {
   actions as appActions,
@@ -25,16 +26,30 @@ import {
 
 
 export default store => next => (action) => {
-  const mapSendbirdMessage = msg => ({
-    id: `${msg.messageId}`,
-    body: msg.message,
-    self: msg.sender.userId === store.getState().app.user.id,
-    date: moment(msg.createdAt).format('D.M.Y'),
-    time: moment(msg.createdAt).format('HH:mm'),
-    userPicture: msg.sender.profileUrl,
-    createdAt: msg.createdAt,
-    type: msg.customType,
-  });
+  const mapSendbirdMessage = (msg) => {
+    // HACK: depythonize data. Seems like the msg.data is a Python object storing
+    let data = {};
+    try {
+      data = JSON.parse(msg.data.split("u'").join("'").split("'").join('"'));
+    } catch (e) {
+      console.error(e);
+    }
+
+    return {
+      id: `${msg.messageId}`,
+      body: msg.message,
+      data: msg.data,
+      self: msg.sender.userId === store.getState().app.user.id,
+      date: moment(msg.createdAt).format('D.M.Y'),
+      time: moment(msg.createdAt).format('HH:mm'),
+      userPicture: msg.sender.profileUrl,
+      createdAt: msg.createdAt,
+      type: msg.customType,
+      changes: [MessageType.QUICK, MessageType.SYSTEM].includes(msg.customType) && data.changes
+      ? data.changes
+      : [],
+    };
+  };
 
   const onMessageReceived = (channel, message) => {
     if (store.getState().app.currentNegotiation.id === channel.url) {
@@ -91,7 +106,13 @@ export default store => next => (action) => {
     case appActions.CREATE_NEGOTIATION:
       createChannel(
         [store.getState().app.user.id, action.negotiantId],
-        { status: NegotiationStatus.PENDING },
+        { status: NegotiationStatus.PENDING,
+          changes: [{
+            object: 'Status',
+            from: 'undefined',
+            to: NegotiationStatus.PENDING,
+          }],
+        },
       )
       .then(metaDataMessage => store.dispatch(push(`/${metaDataMessage.channelUrl}`)))
       .catch((error) => { throw error; });
@@ -135,7 +156,13 @@ export default store => next => (action) => {
       break;
 
     case appActions.DECLINE_NEGOTIATION:
-      updateMetaData(action.id, { status: NegotiationStatus.DECLINED })
+      updateMetaData(action.id, { status: NegotiationStatus.DECLINED,
+        changes: [{
+          object: 'Status',
+          from: NegotiationStatus.PENDING,
+          to: NegotiationStatus.DECLINED,
+        }],
+      })
       .then(getChannels)
       .then((channels) => {
         store.dispatch(sendbirdActionCreators.setChannels(channels));

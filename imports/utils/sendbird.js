@@ -74,7 +74,6 @@ export const sendMessage = (channelUrl, message, data, type = MessageType.USER) 
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
-      console.log(type);
       channel.sendUserMessage(message, data, type, (result, error) => {
         if (error) reject(error);
         else resolve(result);
