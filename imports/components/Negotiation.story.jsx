@@ -5,6 +5,7 @@ import { storiesOf } from '@kadira/storybook';
 import Header from './Header.jsx';
 import MessageInput from './MessageInput.jsx';
 import MessageBox from './MessageBox.jsx';
+import FeeBar from './FeeBar.jsx';
 
 
 storiesOf('Negotiation', module)
@@ -102,6 +103,8 @@ storiesOf('Negotiation', module)
       />
 
       <MessageInput label="MESSAGE" />
+
+      <FeeBar value={800} min={1000} max={1200} label="FEE" />
     </div>
   </div>
 ))
