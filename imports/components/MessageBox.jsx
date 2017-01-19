@@ -14,17 +14,18 @@ const MessageBox = props => (
     .sort((a, b) => ((a.createdAt > b.createdAt) ? 1 : -1))
     .map(message => (
       <div key={message.id}>
-        { message.type === MessageType.USER ?
-          <UserMessage {...message} />
-        :
-          <div>
-            { message.type === MessageType.SYSTEM ?
-              <SystemMessage user={message.self ? 'You' : 'Negotiant'} {...message} />
-            : // message.type === MessageType.QUICK
-              <QuickMessage user={message.self ? 'You' : 'Negotiant'} {...message} />
-             }
-          </div>
-        }
+        {(() => {
+          switch (message.type) {
+            case MessageType.USER:
+              return <UserMessage {...message} />;
+            case MessageType.SYSTEM:
+              return <SystemMessage user={message.self ? 'You' : 'Negotiant'} {...message} />;
+            case MessageType.QUICK:
+              return <QuickMessage user={message.self ? 'You' : 'Negotiant'} {...message} />;
+            default:
+              return <div />;
+          }
+        })()}
       </div>),
     )}
   </div>
