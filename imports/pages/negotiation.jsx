@@ -13,8 +13,8 @@ import MessageInput from '../components/MessageInput.jsx';
 const Negotiation = props => (
   <Form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
     <div className="element-width">
-      <Header tofrom="To" name="Marc Promoter" />
-      <Header tofrom="From" name="Fernando Artist (Agent Tiffany)" />
+      <Header tofrom="To" name={props.negotiantName} />
+      <Header tofrom="From" name={props.selfName} />
       <MessageBox messages={props.messages} />
 
       <Field name="message" component={MessageInput} placeholder="Your message" onClick={props.submit} />
@@ -28,6 +28,8 @@ const Negotiation = props => (
 );
 
 Negotiation.propTypes = {
+  selfName: React.PropTypes.string,
+  negotiantName: React.PropTypes.string,
   handleSubmit: React.PropTypes.func,
   submit: React.PropTypes.func,
   sendMessage: React.PropTypes.func,
@@ -64,6 +66,8 @@ NegotiationLifecycle.propTypes = {
 
 const mapStateToProps = state => ({
   messages: state.app.currentNegotiation.messages,
+  selfName: state.app.user.name,
+  negotiantName: state.app.currentNegotiation.negotiant ? state.app.currentNegotiation.negotiant.name : '',
 });
 
 const mapDispatchToProps = (dispatch, props) => ({
