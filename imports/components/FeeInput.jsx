@@ -3,11 +3,7 @@ import React from 'react';
 const FeeInput = props => (
   <label className="field fee-input" htmlFor="fee-input">
     <div className="label">{props.label}</div>
-    <div className="flex-container">
-      <div className="flex-item fee-input">
-        <input {...props.input} type="number" step="1" min="0" className="form-field" />
-      </div>
-    </div>
+    <input {...props.input} type="number" step="1" min="0" className="form-field" />
   </label>
 );
 

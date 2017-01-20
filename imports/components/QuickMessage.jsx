@@ -29,8 +29,5 @@ QuickMessage.propTypes = {
   user: React.PropTypes.string,
 };
 
-QuickMessage.defaultProps = {
-
-};
 
 export default QuickMessage;

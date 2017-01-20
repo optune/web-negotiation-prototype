@@ -41,8 +41,5 @@ UserMessage.propTypes = {
   userPicture: React.PropTypes.string,
 };
 
-UserMessage.defaultProps = {
-
-};
 
 export default UserMessage;

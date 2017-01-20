@@ -10,42 +10,54 @@ import QuickMessage from './QuickMessage.jsx';
 import MessageType from '../constants/MessageType.js';
 
 
-const MessageBox = props => (
-  <div className="message-box thrust-out">
-    {
-    props.messages
-    .sort((a, b) => ((a.createdAt > b.createdAt) ? 1 : -1))
-    .map(message => (
-      <div key={message.id}>
-        {(() => {
-          switch (message.type) {
-            case MessageType.USER:
-              return <UserMessage {...message} />;
-            case MessageType.SYSTEM:
-              return (
-                <div>
-                  <SystemMessage user={message.self ? 'You' : message.senderName} {...message} />
-                  {(message.body !== ''
-                    ? <div><br /><UserMessage {...message} /></div>
-                    : undefined
-                  )}
-                </div>
-              );
-            case MessageType.QUICK:
-              return <QuickMessage user={message.self ? 'You' : message.senderName} {...message} />;
-            default:
-              return <div />;
-          }
-        })()}
-        <small
-          className={classNames('message-meta')}
-        >
-          <span className="light">{message.date},</span> {message.time}
-        </small>
-      </div>),
-    )}
-  </div>
-);
+class MessageBox extends React.Component {
+  componentDidMount() {
+    this.scroller.scrollTop = this.scroller.scrollHeight;
+  }
+
+  componentDidUpdate() {
+    this.scroller.scrollTop = this.scroller.scrollHeight;
+  }
+
+  render() {
+    return (
+      <div className="message-box thrust-out" ref={(c) => { this.scroller = c; }}>
+        {
+        this.props.messages
+        .sort((a, b) => ((a.createdAt > b.createdAt) ? 1 : -1))
+        .map(message => (
+          <div key={message.id}>
+            {(() => {
+              switch (message.type) {
+                case MessageType.USER:
+                  return <UserMessage {...message} />;
+                case MessageType.SYSTEM:
+                  return (
+                    <div>
+                      <SystemMessage user={message.self ? 'You' : message.senderName} {...message} />
+                      {(message.body !== ''
+                        ? <div><br /><UserMessage {...message} /></div>
+                        : undefined
+                      )}
+                    </div>
+                  );
+                case MessageType.QUICK:
+                  return <QuickMessage user={message.self ? 'You' : message.senderName} {...message} />;
+                default:
+                  return <div />;
+              }
+            })()}
+            <small
+              className={classNames('message-meta')}
+            >
+              <span className="light">{message.date},</span> {message.time}
+            </small>
+          </div>),
+        )}
+      </div>
+    );
+  }
+}
 
 MessageBox.messagePropTypes = React.PropTypes.shape({
   id: React.PropTypes.string,
