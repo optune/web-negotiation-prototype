@@ -1,8 +1,8 @@
-import { configure , addDecorator, setAddon  } from '@kadira/storybook';
+import { configure, addDecorator, setAddon } from '@kadira/storybook';
 import centered from '@kadira/react-storybook-decorator-centered';
 import infoAddon from '@kadira/react-storybook-addon-info';
 
-import '../node_modules/@optune/react-base-components/src/style/app.scss';
+import '../imports/styles/live/app.scss';
 import '../imports/styles/main.scss';
 
 

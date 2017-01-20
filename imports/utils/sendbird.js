@@ -5,7 +5,7 @@ import SendBird from 'sendbird';
 import MessageType from '../constants/MessageType.js';
 
 
-const metaKeys = ['status'];
+const metaKeys = ['status', 'fee', 'lastOfferBy'];
 
 export const api = new SendBird({
   appId: Meteor.settings.public.SENDBIRD_APP_ID,
@@ -35,7 +35,7 @@ export const connect = (id, name, profilePicUrl, onMessageReceived) => (
   }),
 );
 
-const getChannelMetaData = channel => new Promise((resolve, reject) => {
+export const getChannelMetaData = channel => new Promise((resolve, reject) => {
   channel.getMetaData(metaKeys, (response, error) => {
     const enhancedChannel = channel;
     enhancedChannel.metaData = response;
@@ -74,7 +74,6 @@ export const sendMessage = (channelUrl, message, data, type = MessageType.USER) 
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
-      console.log(type);
       channel.sendUserMessage(message, data, type, (result, error) => {
         if (error) reject(error);
         else resolve(result);
@@ -83,16 +82,19 @@ export const sendMessage = (channelUrl, message, data, type = MessageType.USER) 
   ))
 );
 
-export const updateMetaData = (channelUrl, metaData) => (
+export const updateMetaData = (channelUrl, data, message = '') => (
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
+      const metaData = { ...channel.metaData, ...data };
+      delete metaData.changes;
+
       channel.updateMetaData(metaData, true, (response, error) => {
         if (error) reject(error);
         else resolve(response, channel);
       });
     })
-    .then(() => sendMessage(channel.url, `metadata updated: ${JSON.stringify(metaData)}`, metaData, MessageType.SYSTEM))
+    .then(() => sendMessage(channel.url, message, data, MessageType.SYSTEM))
   ))
 );
 

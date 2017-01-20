@@ -3,6 +3,7 @@ import { reset as resetForm, change as changeForm } from 'redux-form';
 import moment from 'moment';
 
 import NegotiationStatus from '../constants/NegotiationStatus.js';
+import MessageType from '../constants/MessageType.js';
 
 import {
   actions as appActions,
@@ -17,6 +18,7 @@ import {
   connect,
   createChannel,
   getChannel,
+  getChannelMetaData,
   getChannels,
   getMessages,
   updateMetaData,
@@ -25,16 +27,37 @@ import {
 
 
 export default store => next => (action) => {
-  const mapSendbirdMessage = msg => ({
-    id: `${msg.messageId}`,
-    body: msg.message,
-    self: msg.sender.userId === store.getState().app.user.id,
-    date: moment(msg.createdAt).format('D.M.Y'),
-    time: moment(msg.createdAt).format('HH:mm'),
-    userPicture: msg.sender.profileUrl,
-    createdAt: msg.createdAt,
-    type: msg.customType,
-  });
+  const mapSendbirdMessage = (msg) => {
+    // HACK: depythonize data. Seems like the msg.data is a Python object storing
+    let data = {};
+    try {
+      if (msg.data !== '') {
+        data = JSON.parse(msg.data.split("u'").join("'").split("'").join('"'));
+      }
+    } catch (e) {
+      console.error({ msg }, e);
+    }
+
+    const changes = data.changes;
+    delete data.changes;
+
+    return {
+      id: `${msg.messageId}`,
+      body: msg.message,
+      data,
+      self: msg.sender.userId === store.getState().app.user.id,
+      senderName: msg.sender.nickname,
+      date: moment(msg.createdAt).format('D.M.Y'),
+      time: moment(msg.createdAt).format('HH:mm'),
+      userPicture: msg.sender.profileUrl,
+      createdAt: msg.createdAt,
+      type: msg.customType,
+      changes:
+        [MessageType.QUICK, MessageType.SYSTEM].includes(msg.customType) && changes
+        ? changes
+        : [],
+    };
+  };
 
   const onMessageReceived = (channel, message) => {
     if (store.getState().app.currentNegotiation.id === channel.url) {
@@ -79,6 +102,7 @@ export default store => next => (action) => {
         return {
           id: channel.url,
           status: channel.metaData.status,
+          fee: channel.metaData.fee,
           negotiant: {
             name: negotiant.nickname,
             id: negotiant.userId,
@@ -91,7 +115,15 @@ export default store => next => (action) => {
     case appActions.CREATE_NEGOTIATION:
       createChannel(
         [store.getState().app.user.id, action.negotiantId],
-        { status: NegotiationStatus.PENDING },
+        { status: NegotiationStatus.PENDING,
+          fee: 0,
+          lastOfferBy: store.getState().app.user.id,
+          changes: [{
+            object: 'Status',
+            from: 'undefined',
+            to: NegotiationStatus.PENDING,
+          }],
+        },
       )
       .then(metaDataMessage => store.dispatch(push(`/${metaDataMessage.channelUrl}`)))
       .catch((error) => { throw error; });
@@ -104,14 +136,35 @@ export default store => next => (action) => {
 
     case appActions.SEND_MESSAGE: {
       const channelUrl = store.getState().app.currentNegotiation.id;
+      const userId = store.getState().app.user.id;
 
       store.dispatch(resetForm('negotiation'));
       store.dispatch(appActionCreators.addOptimisticMessage(action.message));
 
-      sendMessage(channelUrl, action.message)
+      const changes = Object.keys(action.data)
+        .filter(key => action.data[key]
+          && action.data[key] !== store.getState().app.currentNegotiation[key])
+        .map(key => ({
+          object: key,
+          from: store.getState().app.currentNegotiation[key] || 'undefined',
+          to: action.data[key],
+        }));
+
+      (() => (changes.length > 0
+        ?
+          updateMetaData(channelUrl, {
+            ...action.data,
+            lastOfferBy: userId,
+            changes,
+          }, action.message)
+        :
+          sendMessage(channelUrl, action.message)
+      ))()
       .then(() => getChannel(channelUrl))
+      .then(channel => getChannelMetaData(channel))
       .then((channel) => {
         store.dispatch(appActionCreators.setCurrentNegotiation(channel.url));
+        store.dispatch(appActionCreators.updateMetadata(channel.metaData));
       })
       .catch((error) => {
         store.dispatch(changeForm('negotiation', 'message', action.message));
@@ -123,7 +176,12 @@ export default store => next => (action) => {
     case appActions.LOAD_NEGOTIATION:
     case appActions.SET_CURRENT_NEGOTIATION:
       if (store.getState().sendbird.connected) {
-        getMessages(action.currentNegotiation.id)
+        getChannel(action.currentNegotiation.id)
+        .then(channel => getChannelMetaData(channel))
+        .then((channel) => {
+          store.dispatch(appActionCreators.updateMetadata(channel.metaData));
+        })
+        .then(() => getMessages(action.currentNegotiation.id))
         .then((messages) => {
           store.dispatch(appActionCreators.setMessages(
             messages
@@ -134,14 +192,33 @@ export default store => next => (action) => {
       }
       break;
 
-    case appActions.DECLINE_NEGOTIATION:
-      updateMetaData(action.id, { status: NegotiationStatus.DECLINED })
+    case appActions.ACCEPT_NEGOTIATION:
+    case appActions.DECLINE_NEGOTIATION: {
+      const nextState = action.type === appActions.ACCEPT_NEGOTIATION
+        ? NegotiationStatus.CONFIRMED
+        : NegotiationStatus.DECLINED;
+
+      updateMetaData(action.id, {
+        status: nextState,
+        changes: [{
+          object: 'Status',
+          from: NegotiationStatus.PENDING,
+          to: nextState,
+        }],
+      })
+      .then(() => getChannel(action.id))
+      .then(channel => getChannelMetaData(channel))
+      .then((channel) => {
+        store.dispatch(appActionCreators.setCurrentNegotiation(channel.url));
+        store.dispatch(appActionCreators.updateMetadata(channel.metaData));
+      })
       .then(getChannels)
       .then((channels) => {
         store.dispatch(sendbirdActionCreators.setChannels(channels));
       })
       .catch((error) => { throw error; });
       break;
+    }
     default:
   }
 

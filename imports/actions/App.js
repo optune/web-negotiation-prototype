@@ -13,11 +13,15 @@ const initialState = {
   negotiations: [],
   currentNegotiation: {
     id: undefined, // sendbird channel url
+    status: 'undefined',
+    fee: 0,
+    lastOfferBy: undefined,
     messages: [],
   },
 };
 
 export const actions = {
+  ACCEPT_NEGOTIATION: 'optune-negotiator/App/ACCEPT_NEGOTIATION',
   ADD_OPTIMISTIC_MESSAGE: 'optune-negotiator/App/ADD_OPTIMISTIC_MESSAGE',
   AUTHENTICATE: 'optune-negotiator/App/AUTHENTICATE',
   CREATE_NEGOTIATION: 'optune-negotiator/App/CREATE_NEGOTIATION',
@@ -33,6 +37,7 @@ export const actions = {
   SET_NEGOTIATIONS: 'optune-negotiator/App/SET_NEGOTIATIONS',
   SET_ONLINE_USERS: 'optune-negotiator/App/SET_ONLINE_USERS',
   RECEIVE_MESSAGE: 'optune-negotiator/App/RECEIVE_MESSAGE',
+  UPDATE_METADATA: 'optune-negotiator/App/UPDATE_METADATA',
 };
 
 export const actionCreators = {
@@ -53,6 +58,10 @@ export const actionCreators = {
   deauthenticate: () => ({
     type: actions.DEAUTHENTICATE,
     ...initialState,
+  }),
+  acceptNegotiation: id => ({
+    type: actions.ACCEPT_NEGOTIATION,
+    id,
   }),
   declineNegotiation: id => ({
     type: actions.DECLINE_NEGOTIATION,
@@ -78,9 +87,12 @@ export const actionCreators = {
     type: actions.SET_MESSAGES,
     messages,
   }),
-  sendMessage: message => ({
+  sendMessage: values => ({
     type: actions.SEND_MESSAGE,
-    message,
+    message: values.message,
+    data: {
+      fee: values.fee,
+    },
   }),
   addOptimisticMessage: message => ({
     type: actions.ADD_OPTIMISTIC_MESSAGE,
@@ -90,6 +102,10 @@ export const actionCreators = {
     type: actions.RECEIVE_MESSAGE,
     message,
     negotiationId,
+  }),
+  updateMetadata: metadata => ({
+    type: actions.UPDATE_METADATA,
+    metadata,
   }),
   login: () => ({ type: actions.LOGIN }),
   logout: () => ({ type: actions.LOGOUT }),
@@ -110,6 +126,7 @@ export const reducer = (state = initialState, action) => {
         ...state,
         ...params,
       };
+    case actions.ACCEPT_NEGOTIATION:
     case actions.DECLINE_NEGOTIATION:
       return {
         ...state,
@@ -118,7 +135,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         currentNegotiation: {
-          id: params.currentNegotiation.id,
+          ...state.negotiations.find(n => n.id === params.currentNegotiation.id),
           messages: state.currentNegotiation.messages,
         },
       };
@@ -126,7 +143,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         currentNegotiation: {
-          id: state.currentNegotiation.id,
+          ...state.currentNegotiation,
           messages: params.messages,
         },
       };
@@ -134,7 +151,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         currentNegotiation: {
-          id: state.currentNegotiation.id,
+          ...state.currentNegotiation,
           messages: [
             ...state.currentNegotiation.messages,
             {
@@ -154,7 +171,8 @@ export const reducer = (state = initialState, action) => {
         newState = {
           ...state,
           currentNegotiation: {
-            id: state.currentNegotiation.id,
+            ...state.currentNegotiation,
+            ...params.message.data,
             messages: [
               ...state.currentNegotiation.messages,
               params.message,
@@ -175,6 +193,14 @@ export const reducer = (state = initialState, action) => {
 
       return newState;
     }
+    case actions.UPDATE_METADATA:
+      return {
+        ...state,
+        currentNegotiation: {
+          ...state.currentNegotiation,
+          ...params.metadata,
+        },
+      };
     default:
       return state;
   }

@@ -1,103 +1,62 @@
-// NPM imports
-import classNames from 'classnames';
-
-// React imports
 import React from 'react';
 
-// Local imports
-import Avatar from './Avatar.jsx';
+import SystemMessage from './SystemMessage.jsx';
+import UserMessage from './UserMessage.jsx';
+import QuickMessage from './QuickMessage.jsx';
 import MessageType from '../constants/MessageType.js';
 
 
-const MessageBox = props => (
-  <div className="message-box thrust-out">
-    {
-    props.messages
-    .sort((a, b) => ((a.createdAt > b.createdAt) ? 1 : -1))
-    .map(message => (
-      <div key={message.id}>
-        { message.type === MessageType.USER ?
-          <div>
-            <div
-              className={classNames('message', {
-                right: message.self,
-                left: !message.self,
-              })}
-            >
-              <div
-                className={classNames('edge', {
-                  right: !message.self,
-                  left: message.self,
-                })}
-              />
-              {message.body}
-            </div>
-            { (!message.self && message.userPicture) ?
-              <Avatar
-                className="left"
-                img={message.userPicture}
-                size="small"
-              /> : undefined
-            }
-            <br className="clear" />
-          </div>
-        :
-          <div>
-            { message.type === MessageType.SYSTEM ?
-              <div className="bluebox">
-                <div>
-                  {!message.self ?
-                    <strong>The Other </strong> : <strong>Me </strong>
-                  }
-                  updated the offer:
-                </div>
-                <div>
-                  <ul>
-                    {(message.changes || []).map(change => (
-                      <li>
-                        -
-                        <strong>{change.object}</strong>
-                        changed from {change.from} to
-                        <strong>{change.to}</strong>
-                      </li>
-                      ),
-                    )}
-                  </ul>
-                </div>
-              </div>
-            : // message.type === MessageType.QUICK
-              <div className="bluebox">
-                <div>
-                  { !message.self ?
-                    <strong>The Other</strong> : <strong>Me</strong> } sent a quickanswer:
-                  <div>
-                    <ul>
-                      {(message.changes || []).map(change => (
-                        <li>
-                          - {change.message}
-                        </li>
-                        ),
+class MessageBox extends React.Component {
+  componentDidMount() {
+    this.scroller.scrollTop = this.scroller.scrollHeight;
+  }
+
+  componentDidUpdate() {
+    this.scroller.scrollTop = this.scroller.scrollHeight;
+  }
+
+  render() {
+    return (
+      <div className="message-box thrust-out" ref={(c) => { this.scroller = c; }}>
+        {
+        this.props.messages
+        .sort((a, b) => ((a.createdAt > b.createdAt) ? 1 : -1))
+        .map(message => (
+          <div key={message.id}>
+            {(() => {
+              switch (message.type) {
+                case MessageType.USER:
+                  return <UserMessage {...message} />;
+                case MessageType.SYSTEM:
+                  return (
+                    <div>
+                      <SystemMessage user={message.self ? 'You' : message.senderName} {...message} />
+                      {(message.body !== ''
+                        ? <div><br /><UserMessage {...message} /></div>
+                        : undefined
                       )}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-             }
-          </div>
-        }
-        <small
-          className={classNames('message-meta')}
-        >
-          <span className="light">{message.date},</span> {message.time}
-        </small>
-      </div>),
-    )}
-  </div>
-);
+                    </div>
+                  );
+                case MessageType.QUICK:
+                  return <QuickMessage user={message.self ? 'You' : message.senderName} {...message} />;
+                default:
+                  return <div />;
+              }
+            })()}
+            <small className="message-meta">
+              <span className="light">{message.date},</span> {message.time}
+            </small>
+          </div>),
+        )}
+      </div>
+    );
+  }
+}
 
 MessageBox.messagePropTypes = React.PropTypes.shape({
   id: React.PropTypes.string,
   self: React.PropTypes.bool,
+  senderName: React.PropTypes.string,
   body: React.PropTypes.string,
   userPicture: React.PropTypes.string,
   createdAt: React.PropTypes.number,

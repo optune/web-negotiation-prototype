@@ -83,10 +83,34 @@ input[type=range] {
   padding: 10px;
   color: white;
   font-family: "Brandon Text Regular", Helvetica, sans-serif;
-    font-size: 11px;
-    font-weight: normal;
-    letter-spacing: 0.1px;
-    line-height: 1.5;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.1px;
+  line-height: 1.5;
+}
+
+.greenbox {
+  background-color: #27E200;
+  width: 100%;
+  padding: 10px;
+  color: white;
+  font-family: "Brandon Text Regular", Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.1px;
+  line-height: 1.5;
+}
+
+.redbox {
+  background-color: #D0021B;
+  width: 100%;
+  padding: 10px;
+  color: white;
+  font-family: "Brandon Text Regular", Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.1px;
+  line-height: 1.5;
 }
 
 .progress{
@@ -145,4 +169,9 @@ input[type=range] {
     right: 0px;
     background-color: #FFFFFF;
     box-shadow: 3px 6px 18px 0px rgba(0, 0, 0, 0.2);
+}
+
+.icon-button {
+  padding: 0;
+  background-color: transparent;
 }
