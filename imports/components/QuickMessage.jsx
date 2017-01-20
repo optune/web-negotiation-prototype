@@ -1,6 +1,3 @@
-// NPM imports
-import classNames from 'classnames';
-
 // React imports
 import React from 'react';
 
@@ -20,11 +17,6 @@ const QuickMessage = props => (
         </ul>
       </div>
     </div>
-    <small
-      className={classNames('message-meta')}
-    >
-      <span className="light">{props.date},</span> {props.time}
-    </small>
   </div>
 );
 
@@ -34,8 +26,6 @@ QuickMessage.propTypes = {
     from: React.PropTypes.string,
     to: React.PropTypes.string,
   })),
-  date: React.PropTypes.string,
-  time: React.PropTypes.string,
   user: React.PropTypes.string,
 };
 

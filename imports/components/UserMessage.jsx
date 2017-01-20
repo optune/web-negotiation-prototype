@@ -32,11 +32,6 @@ const UserMessage = props => (
       /> : undefined
     }
     <br className="clear" />
-    <small
-      className={classNames('message-meta')}
-    >
-      <span className="light">{props.date},</span> {props.time}
-    </small>
   </div>
 );
 
@@ -44,8 +39,6 @@ UserMessage.propTypes = {
   self: React.PropTypes.bool,
   body: React.PropTypes.string,
   userPicture: React.PropTypes.string,
-  date: React.PropTypes.string,
-  time: React.PropTypes.string,
 };
 
 UserMessage.defaultProps = {

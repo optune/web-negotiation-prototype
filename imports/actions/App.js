@@ -78,9 +78,12 @@ export const actionCreators = {
     type: actions.SET_MESSAGES,
     messages,
   }),
-  sendMessage: message => ({
+  sendMessage: values => ({
     type: actions.SEND_MESSAGE,
-    message,
+    message: values.message,
+    data: {
+      fee: values.fee,
+    },
   }),
   addOptimisticMessage: message => ({
     type: actions.ADD_OPTIMISTIC_MESSAGE,
@@ -135,7 +138,7 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         currentNegotiation: {
-          id: state.currentNegotiation.id,
+          ...state.currentNegotiation,
           messages: [
             ...state.currentNegotiation.messages,
             {
@@ -155,7 +158,7 @@ export const reducer = (state = initialState, action) => {
         newState = {
           ...state,
           currentNegotiation: {
-            id: state.currentNegotiation.id,
+            ...state.currentNegotiation,
             messages: [
               ...state.currentNegotiation.messages,
               params.message,

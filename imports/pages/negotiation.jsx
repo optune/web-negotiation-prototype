@@ -9,7 +9,6 @@ import Header from '../components/Header.jsx';
 import MessageBox from '../components/MessageBox.jsx';
 import MessageInput from '../components/MessageInput.jsx';
 
-/* <!-- <MessageInput name="message"   /> */
 
 const Negotiation = props => (
   <Form className="flex-center-middle" onSubmit={props.handleSubmit(props.sendMessage)}>
@@ -21,7 +20,7 @@ const Negotiation = props => (
       <div className="whitebox">
         <Field name="fee" component={FeeInput} label="Fee" />
       </div>
-      <Field name="message" component={MessageInput} label="Message" placeholder="Your message" onClick={props.submit} />
+      <Field name="message" component={MessageInput} label="Message" placeholder="Your message" />
 
       <p>
         <Link className="button small" to="/">Back</Link>
@@ -35,7 +34,6 @@ Negotiation.propTypes = {
   selfName: React.PropTypes.string,
   negotiantName: React.PropTypes.string,
   handleSubmit: React.PropTypes.func,
-  submit: React.PropTypes.func,
   sendMessage: React.PropTypes.func,
   decline: React.PropTypes.func,
   messages: React.PropTypes.arrayOf(
@@ -83,7 +81,7 @@ const mapDispatchToProps = (dispatch, props) => ({
       dispatch(actionCreators.declineNegotiation(props.params.id));
     }
   },
-  sendMessage(values) { dispatch(actionCreators.sendMessage(values.message)); },
+  sendMessage(values) { dispatch(actionCreators.sendMessage(values)); },
 });
 
 

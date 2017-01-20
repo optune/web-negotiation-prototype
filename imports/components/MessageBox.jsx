@@ -1,3 +1,6 @@
+// NPM imports
+import classNames from 'classnames';
+
 // React imports
 import React from 'react';
 
@@ -19,13 +22,26 @@ const MessageBox = props => (
             case MessageType.USER:
               return <UserMessage {...message} />;
             case MessageType.SYSTEM:
-              return <SystemMessage user={message.self ? 'You' : 'Negotiant'} {...message} />;
+              return (
+                <div>
+                  <SystemMessage user={message.self ? 'You' : message.senderName} {...message} />
+                  {(message.body !== ''
+                    ? <div><br /><UserMessage {...message} /></div>
+                    : undefined
+                  )}
+                </div>
+              );
             case MessageType.QUICK:
-              return <QuickMessage user={message.self ? 'You' : 'Negotiant'} {...message} />;
+              return <QuickMessage user={message.self ? 'You' : message.senderName} {...message} />;
             default:
               return <div />;
           }
         })()}
+        <small
+          className={classNames('message-meta')}
+        >
+          <span className="light">{message.date},</span> {message.time}
+        </small>
       </div>),
     )}
   </div>
@@ -34,6 +50,7 @@ const MessageBox = props => (
 MessageBox.messagePropTypes = React.PropTypes.shape({
   id: React.PropTypes.string,
   self: React.PropTypes.bool,
+  senderName: React.PropTypes.string,
   body: React.PropTypes.string,
   userPicture: React.PropTypes.string,
   createdAt: React.PropTypes.number,

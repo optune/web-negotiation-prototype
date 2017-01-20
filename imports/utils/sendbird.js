@@ -82,7 +82,7 @@ export const sendMessage = (channelUrl, message, data, type = MessageType.USER) 
   ))
 );
 
-export const updateMetaData = (channelUrl, metaData) => (
+export const updateMetaData = (channelUrl, metaData, message = '') => (
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
@@ -91,7 +91,7 @@ export const updateMetaData = (channelUrl, metaData) => (
         else resolve(response, channel);
       });
     })
-    .then(() => sendMessage(channel.url, `metadata updated: ${JSON.stringify(metaData)}`, metaData, MessageType.SYSTEM))
+    .then(() => sendMessage(channel.url, message, metaData, MessageType.SYSTEM))
   ))
 );
 

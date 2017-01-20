@@ -42,6 +42,7 @@ export default store => next => (action) => {
       body: msg.message,
       data: msg.data,
       self: msg.sender.userId === store.getState().app.user.id,
+      senderName: msg.sender.nickname,
       date: moment(msg.createdAt).format('D.M.Y'),
       time: moment(msg.createdAt).format('HH:mm'),
       userPicture: msg.sender.profileUrl,
@@ -132,7 +133,18 @@ export default store => next => (action) => {
       store.dispatch(resetForm('negotiation'));
       store.dispatch(appActionCreators.addOptimisticMessage(action.message));
 
-      sendMessage(channelUrl, action.message)
+      const changes = Object.keys(action.data)
+        .filter(key => action.data[key])
+        .map(key => ({
+          object: key,
+          from: store.getState().app.currentNegotiation[key] || 'undefined',
+          to: action.data[key],
+        }));
+
+      (() => (changes.length > 0
+        ? updateMetaData(channelUrl, { ...action.data, changes }, action.message)
+        : sendMessage(channelUrl, action.message)
+      ))()
       .then(() => getChannel(channelUrl))
       .then((channel) => {
         store.dispatch(appActionCreators.setCurrentNegotiation(channel.url));

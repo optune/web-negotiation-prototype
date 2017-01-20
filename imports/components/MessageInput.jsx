@@ -15,7 +15,7 @@ const MessageInput = props => (
           </textarea>
         </div>
         <div className="sendIcon flex-item">
-          <button onClick={props.onClick} className="icon-button">
+          <button className="icon-button" type="submit">
             <svg width="21px" height="18px" viewBox="2 3 21 18" >
               <polygon
                 id="Fill-5" stroke="none" fill="#000000"
@@ -33,7 +33,6 @@ MessageInput.propTypes = {
   name: React.PropTypes.string,
   label: React.PropTypes.string,
   message: React.PropTypes.string,
-  onClick: React.PropTypes.func,
   input: React.PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
