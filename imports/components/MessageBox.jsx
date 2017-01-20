@@ -1,7 +1,3 @@
-// NPM imports
-import classNames from 'classnames';
-
-// React imports
 import React from 'react';
 
 import SystemMessage from './SystemMessage.jsx';
@@ -47,9 +43,7 @@ class MessageBox extends React.Component {
                   return <div />;
               }
             })()}
-            <small
-              className={classNames('message-meta')}
-            >
+            <small className="message-meta">
               <span className="light">{message.date},</span> {message.time}
             </small>
           </div>),

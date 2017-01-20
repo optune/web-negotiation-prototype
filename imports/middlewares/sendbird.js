@@ -18,6 +18,7 @@ import {
   connect,
   createChannel,
   getChannel,
+  getChannelMetaData,
   getChannels,
   getMessages,
   updateMetaData,
@@ -37,10 +38,13 @@ export default store => next => (action) => {
       console.error({ msg }, e);
     }
 
+    const changes = data.changes;
+    delete data.changes;
+
     return {
       id: `${msg.messageId}`,
       body: msg.message,
-      data: msg.data,
+      data,
       self: msg.sender.userId === store.getState().app.user.id,
       senderName: msg.sender.nickname,
       date: moment(msg.createdAt).format('D.M.Y'),
@@ -49,8 +53,8 @@ export default store => next => (action) => {
       createdAt: msg.createdAt,
       type: msg.customType,
       changes:
-        [MessageType.QUICK, MessageType.SYSTEM].includes(msg.customType) && data.changes
-        ? data.changes
+        [MessageType.QUICK, MessageType.SYSTEM].includes(msg.customType) && changes
+        ? changes
         : [],
     };
   };
@@ -113,6 +117,7 @@ export default store => next => (action) => {
         [store.getState().app.user.id, action.negotiantId],
         { status: NegotiationStatus.PENDING,
           fee: 0,
+          lastOfferBy: store.getState().app.user.id,
           changes: [{
             object: 'Status',
             from: 'undefined',
@@ -131,12 +136,14 @@ export default store => next => (action) => {
 
     case appActions.SEND_MESSAGE: {
       const channelUrl = store.getState().app.currentNegotiation.id;
+      const userId = store.getState().app.user.id;
 
       store.dispatch(resetForm('negotiation'));
       store.dispatch(appActionCreators.addOptimisticMessage(action.message));
 
       const changes = Object.keys(action.data)
-        .filter(key => action.data[key])
+        .filter(key => action.data[key]
+          && action.data[key] !== store.getState().app.currentNegotiation[key])
         .map(key => ({
           object: key,
           from: store.getState().app.currentNegotiation[key] || 'undefined',
@@ -144,12 +151,20 @@ export default store => next => (action) => {
         }));
 
       (() => (changes.length > 0
-        ? updateMetaData(channelUrl, { ...action.data, changes }, action.message)
-        : sendMessage(channelUrl, action.message)
+        ?
+          updateMetaData(channelUrl, {
+            ...action.data,
+            lastOfferBy: userId,
+            changes,
+          }, action.message)
+        :
+          sendMessage(channelUrl, action.message)
       ))()
       .then(() => getChannel(channelUrl))
+      .then(channel => getChannelMetaData(channel))
       .then((channel) => {
         store.dispatch(appActionCreators.setCurrentNegotiation(channel.url));
+        store.dispatch(appActionCreators.updateMetadata(channel.metaData));
       })
       .catch((error) => {
         store.dispatch(changeForm('negotiation', 'message', action.message));
@@ -161,7 +176,12 @@ export default store => next => (action) => {
     case appActions.LOAD_NEGOTIATION:
     case appActions.SET_CURRENT_NEGOTIATION:
       if (store.getState().sendbird.connected) {
-        getMessages(action.currentNegotiation.id)
+        getChannel(action.currentNegotiation.id)
+        .then(channel => getChannelMetaData(channel))
+        .then((channel) => {
+          store.dispatch(appActionCreators.updateMetadata(channel.metaData));
+        })
+        .then(() => getMessages(action.currentNegotiation.id))
         .then((messages) => {
           store.dispatch(appActionCreators.setMessages(
             messages
@@ -172,13 +192,25 @@ export default store => next => (action) => {
       }
       break;
 
-    case appActions.DECLINE_NEGOTIATION:
-      updateMetaData(action.id, { status: NegotiationStatus.DECLINED,
+    case appActions.ACCEPT_NEGOTIATION:
+    case appActions.DECLINE_NEGOTIATION: {
+      const nextState = action.type === appActions.ACCEPT_NEGOTIATION
+        ? NegotiationStatus.CONFIRMED
+        : NegotiationStatus.DECLINED;
+
+      updateMetaData(action.id, {
+        status: nextState,
         changes: [{
           object: 'Status',
           from: NegotiationStatus.PENDING,
-          to: NegotiationStatus.DECLINED,
+          to: nextState,
         }],
+      })
+      .then(() => getChannel(action.id))
+      .then(channel => getChannelMetaData(channel))
+      .then((channel) => {
+        store.dispatch(appActionCreators.setCurrentNegotiation(channel.url));
+        store.dispatch(appActionCreators.updateMetadata(channel.metaData));
       })
       .then(getChannels)
       .then((channels) => {
@@ -186,6 +218,7 @@ export default store => next => (action) => {
       })
       .catch((error) => { throw error; });
       break;
+    }
     default:
   }
 

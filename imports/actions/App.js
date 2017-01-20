@@ -13,11 +13,15 @@ const initialState = {
   negotiations: [],
   currentNegotiation: {
     id: undefined, // sendbird channel url
+    status: 'undefined',
+    fee: 0,
+    lastOfferBy: undefined,
     messages: [],
   },
 };
 
 export const actions = {
+  ACCEPT_NEGOTIATION: 'optune-negotiator/App/ACCEPT_NEGOTIATION',
   ADD_OPTIMISTIC_MESSAGE: 'optune-negotiator/App/ADD_OPTIMISTIC_MESSAGE',
   AUTHENTICATE: 'optune-negotiator/App/AUTHENTICATE',
   CREATE_NEGOTIATION: 'optune-negotiator/App/CREATE_NEGOTIATION',
@@ -33,6 +37,7 @@ export const actions = {
   SET_NEGOTIATIONS: 'optune-negotiator/App/SET_NEGOTIATIONS',
   SET_ONLINE_USERS: 'optune-negotiator/App/SET_ONLINE_USERS',
   RECEIVE_MESSAGE: 'optune-negotiator/App/RECEIVE_MESSAGE',
+  UPDATE_METADATA: 'optune-negotiator/App/UPDATE_METADATA',
 };
 
 export const actionCreators = {
@@ -53,6 +58,10 @@ export const actionCreators = {
   deauthenticate: () => ({
     type: actions.DEAUTHENTICATE,
     ...initialState,
+  }),
+  acceptNegotiation: id => ({
+    type: actions.ACCEPT_NEGOTIATION,
+    id,
   }),
   declineNegotiation: id => ({
     type: actions.DECLINE_NEGOTIATION,
@@ -94,6 +103,10 @@ export const actionCreators = {
     message,
     negotiationId,
   }),
+  updateMetadata: metadata => ({
+    type: actions.UPDATE_METADATA,
+    metadata,
+  }),
   login: () => ({ type: actions.LOGIN }),
   logout: () => ({ type: actions.LOGOUT }),
 };
@@ -113,6 +126,7 @@ export const reducer = (state = initialState, action) => {
         ...state,
         ...params,
       };
+    case actions.ACCEPT_NEGOTIATION:
     case actions.DECLINE_NEGOTIATION:
       return {
         ...state,
@@ -158,6 +172,7 @@ export const reducer = (state = initialState, action) => {
           ...state,
           currentNegotiation: {
             ...state.currentNegotiation,
+            ...params.message.data,
             messages: [
               ...state.currentNegotiation.messages,
               params.message,
@@ -178,6 +193,14 @@ export const reducer = (state = initialState, action) => {
 
       return newState;
     }
+    case actions.UPDATE_METADATA:
+      return {
+        ...state,
+        currentNegotiation: {
+          ...state.currentNegotiation,
+          ...params.metadata,
+        },
+      };
     default:
       return state;
   }
