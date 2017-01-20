@@ -1,10 +1,22 @@
+import classNames from 'classnames';
+
 // React imports
 import React from 'react';
+
+import NegotiationStatus from '../constants/NegotiationStatus.js';
 
 
 const SystemMessage = props => (
   <div>
-    <div className="bluebox">
+    <div
+      className={classNames(
+        'bluebox',
+        {
+          greenbox: props.changes[0].to === NegotiationStatus.CONFIRMED,
+          redbox: props.changes[0].to === NegotiationStatus.DECLINED,
+        })
+      }
+    >
       <div>{props.user} updated the offer:</div>
       <div>
         <ul>

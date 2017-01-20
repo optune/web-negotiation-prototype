@@ -83,10 +83,34 @@ input[type=range] {
   padding: 10px;
   color: white;
   font-family: "Brandon Text Regular", Helvetica, sans-serif;
-    font-size: 11px;
-    font-weight: normal;
-    letter-spacing: 0.1px;
-    line-height: 1.5;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.1px;
+  line-height: 1.5;
+}
+
+.greenbox {
+  background-color: #27E200;
+  width: 100%;
+  padding: 10px;
+  color: white;
+  font-family: "Brandon Text Regular", Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.1px;
+  line-height: 1.5;
+}
+
+.redbox {
+  background-color: #D0021B;
+  width: 100%;
+  padding: 10px;
+  color: white;
+  font-family: "Brandon Text Regular", Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0.1px;
+  line-height: 1.5;
 }
 
 .progress{
