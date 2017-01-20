@@ -122,7 +122,6 @@ export const reducer = (state = initialState, action) => {
         ...state,
         currentNegotiation: {
           ...state.negotiations.find(n => n.id === params.currentNegotiation.id),
-          // id: params.currentNegotiation.id,
           messages: state.currentNegotiation.messages,
         },
       };

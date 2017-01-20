@@ -5,7 +5,7 @@ import SendBird from 'sendbird';
 import MessageType from '../constants/MessageType.js';
 
 
-const metaKeys = ['status'];
+const metaKeys = ['status', 'fee'];
 
 export const api = new SendBird({
   appId: Meteor.settings.public.SENDBIRD_APP_ID,
@@ -82,16 +82,21 @@ export const sendMessage = (channelUrl, message, data, type = MessageType.USER) 
   ))
 );
 
-export const updateMetaData = (channelUrl, metaData, message = '') => (
+export const updateMetaData = (channelUrl, data, message = '') => (
   getChannel(channelUrl)
   .then(channel => (
     new Promise((resolve, reject) => {
+      const metaData = { ...channel.metaData, ...data };
+      delete metaData.changes;
+
+      console.log(metaData, channel.metaData);
+
       channel.updateMetaData(metaData, true, (response, error) => {
         if (error) reject(error);
         else resolve(response, channel);
       });
     })
-    .then(() => sendMessage(channel.url, message, metaData, MessageType.SYSTEM))
+    .then(() => sendMessage(channel.url, message, data, MessageType.SYSTEM))
   ))
 );
 

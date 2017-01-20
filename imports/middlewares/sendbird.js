@@ -98,6 +98,7 @@ export default store => next => (action) => {
         return {
           id: channel.url,
           status: channel.metaData.status,
+          fee: channel.metaData.fee,
           negotiant: {
             name: negotiant.nickname,
             id: negotiant.userId,
@@ -111,6 +112,7 @@ export default store => next => (action) => {
       createChannel(
         [store.getState().app.user.id, action.negotiantId],
         { status: NegotiationStatus.PENDING,
+          fee: 0,
           changes: [{
             object: 'Status',
             from: 'undefined',
